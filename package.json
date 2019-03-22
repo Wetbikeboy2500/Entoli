@@ -1,0 +1,14 @@
+{
+  "name": "entoli",
+  "version": "1.0.0",
+  "description": "Cli input thingy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}
