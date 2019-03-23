@@ -2,15 +2,22 @@
   "name": "entoli",
   "version": "1.0.0",
   "description": "Cli input thingy",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node index.js"
+    "start": "./node_modules/.bin/babel-node src",
+    "build": "./node_modules/.bin/babel --presets @babel/preset-env src --out-dir dist",
+    "startBuild": "node dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^2.4.2",
+    "simple-node-logger": "^18.12.22"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
     "@babel/node": "^7.2.2",
-    "chalk": "^2.4.2"
+    "@babel/preset-env": "^7.4.2"
   }
 }
