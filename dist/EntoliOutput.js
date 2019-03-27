@@ -29,23 +29,14 @@ var EntoliOutput = function () {
 
     this.values = new Map(attributes);
     this.output = [];
+    this.enabled = true;
   }
 
   _createClass(EntoliOutput, [{
     key: "setup",
-    value: function setup() {
-      var _this = this;
-
-      var arr1 = [['Select an option'], [function () {
-        return _this.get("i");
-      }, ") Hello World"], [function () {
-        return _this.get("i") + 1;
-      }, ") Exit"], ["Last key pressed, ", function () {
-        return _this.get("key");
-      }, ", ", function () {
-        return _this.get("o");
-      }]];
+    value: function setup(arr1) {
       this.template = arr1;
+      log.info(this.template);
       var that = this;
       this.output = this.template.map(function (a, i) {
         return that.buildOutput(that.template.length - 1 - i);
@@ -68,6 +59,7 @@ var EntoliOutput = function () {
     key: "update",
     value: function update() {
       var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      log.info(attributes);
       this.values = new Map([].concat(_toConsumableArray(this.values), _toConsumableArray(attributes)));
       this.checkDiff();
     }
@@ -96,11 +88,13 @@ var EntoliOutput = function () {
   }, {
     key: "render",
     value: function render(line) {
-      this.clear(line);
-      process.stdout.moveCursor(0, line * -1);
-      process.stdout.cursorTo(0);
-      process.stdout.write(this.output[this.output.length - 1 - line]);
-      process.stdout.moveCursor(0, line);
+      if (this.enabled) {
+        this.clear(line);
+        process.stdout.moveCursor(0, line * -1);
+        process.stdout.cursorTo(0);
+        process.stdout.write(this.output[this.output.length - 1 - line]);
+        process.stdout.moveCursor(0, line);
+      }
     }
   }, {
     key: "clear",
@@ -121,6 +115,14 @@ var EntoliOutput = function () {
 
         return a;
       }).join('');
+    }
+  }, {
+    key: "exit",
+    value: function exit() {
+      this.enabled = false;
+      process.stdout.moveCursor(0, -this.template.length);
+      process.stdout.cursorTo(0);
+      process.stdout.clearScreenDown();
     }
   }]);
 
