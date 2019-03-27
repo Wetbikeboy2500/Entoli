@@ -11,6 +11,8 @@ export class EntoliOutput {
     setup (arr1) {
         this.template = arr1;
 
+        log.info(this.template);
+
         let that = this;
 
         this.output = this.template.map((a, i) => {
@@ -30,6 +32,7 @@ export class EntoliOutput {
     }
 
     update (attributes = []) {
+        log.info(attributes);
         //attributes override the old and can add new ones
         this.values = new Map([...this.values, ...attributes]);
 
