@@ -5,17 +5,10 @@ export class EntoliOutput {
         this.values = new Map(attributes);
 
         this.output = [];
+        this.enabled = true;
     }
 
-    setup () {
-        //TODO: make this take an input for template
-        let arr1 = [
-            ['Select an option'],
-            [() => this.get(`i`), `) Hello World`],
-            [() => this.get(`i`) + 1, `) Exit`],
-            [`Last key pressed, `, () => this.get(`key`), `, `, () => this.get(`o`)]
-        ];
-
+    setup (arr1) {
         this.template = arr1;
 
         let that = this;
@@ -65,11 +58,13 @@ export class EntoliOutput {
     }
 
     render (line) {
-        this.clear(line);
-        process.stdout.moveCursor(0, line * -1);
-        process.stdout.cursorTo(0);
-        process.stdout.write(this.output[this.output.length - 1 - line]);
-        process.stdout.moveCursor(0, line);
+        if (this.enabled) {
+            this.clear(line);
+            process.stdout.moveCursor(0, line * -1);
+            process.stdout.cursorTo(0);
+            process.stdout.write(this.output[this.output.length - 1 - line]);
+            process.stdout.moveCursor(0, line);
+        }
     }
 
     clear (line) { //0 is first from bottom, 1 is second, etc.
@@ -88,5 +83,12 @@ export class EntoliOutput {
             }
             return a;
         }).join('');
+    }
+
+    exit () {
+        this.enabled = false;
+        process.stdout.moveCursor(0, -this.template.length);
+        process.stdout.cursorTo(0);
+        process.stdout.clearScreenDown();
     }
 }
