@@ -6,6 +6,7 @@ export class EntoliOutput {
 
         this.output = [];
         this.enabled = true;
+        this.isSetup = false;
     }
 
     setup (arr1) {
@@ -22,6 +23,8 @@ export class EntoliOutput {
         for (let i = 0; i < this.template.length; i++) {
             this.render(i);
         }
+
+        this.isSetup = true;
     }
 
     get (name) {
@@ -32,11 +35,13 @@ export class EntoliOutput {
     }
 
     update (attributes = []) {
-        log.info(attributes);
-        //attributes override the old and can add new ones
-        this.values = new Map([...this.values, ...attributes]);
+        if (this.isSetup) {
+            log.info(attributes);
+            //attributes override the old and can add new ones
+            this.values = new Map([...this.values, ...attributes]);
 
-        this.checkDiff();
+            this.checkDiff();
+        }
     }
 
     //checks what has currently been outputed vs what should be. This limits the amount of updates to all the text
