@@ -9,6 +9,8 @@ var _EntoliOutput = require("./EntoliOutput");
 
 var _readline = _interopRequireDefault(require("readline"));
 
+var _chalk = _interopRequireDefault(require("chalk"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -25,13 +27,11 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var log = require('simple-node-logger').createSimpleFileLogger('project.log');
-
 var EntoliList = function () {
   function EntoliList(items) {
     _classCallCheck(this, EntoliList);
 
-    this.items = [['hello', 'world'], ['good bye', 'world']];
+    this.items = items;
     this.index = 0;
   }
 
@@ -40,6 +40,8 @@ var EntoliList = function () {
     value: function start() {
       var that = this;
       return new Promise(function (resolve, reject) {
+        process.stdin.removeAllListeners();
+
         _readline.default.emitKeypressEvents(process.stdin);
 
         process.stdin.setRawMode(true);
@@ -49,10 +51,10 @@ var EntoliList = function () {
         })), [['selection', 'null'], ['selected', 0]]));
         s.setup([["Select an option"]].concat(_toConsumableArray(that.items.map(function (a, i) {
           return ['    ', function () {
-            return s.get('selected') === i ? '*' : '-';
+            return s.get('selected') === i ? _chalk.default.green('*') : '-';
           }, ') ', a[0]];
         })), [["Current Selection: ", function () {
-          return s.get('selection');
+          return _chalk.default.green(s.get('selection'));
         }]]));
         process.stdin.on('keypress', function (str, key) {
           if (key.ctrl && key.name === 'c') {
@@ -61,6 +63,15 @@ var EntoliList = function () {
             process.stdin.setRawMode(false);
             process.stdout.write('Exited the object');
             process.exit();
+          } else if (key.name == 'return') {
+            process.stderr.write('\x1B[?25h');
+            s.exit();
+            process.stdin.setRawMode(false);
+            process.stdout.write("Selected option: " + _chalk.default.blue(that.items[that.index][0]));
+            process.stdout.moveCursor(0, 1);
+            process.stdout.cursorTo(0);
+            process.stdin.removeAllListeners();
+            resolve(that.items[that.index][1]);
           } else {
             if (key.name == 'up') {
               that.index--;
@@ -78,8 +89,7 @@ var EntoliList = function () {
               that.index = that.items.length - 1;
             }
 
-            log.info(that.index);
-            s.update([['selected', that.index]]);
+            s.update([['selected', that.index], ['selection', that.items[that.index][0]]]);
           }
         });
       });

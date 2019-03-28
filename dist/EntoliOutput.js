@@ -30,6 +30,7 @@ var EntoliOutput = function () {
     this.values = new Map(attributes);
     this.output = [];
     this.enabled = true;
+    this.isSetup = false;
   }
 
   _createClass(EntoliOutput, [{
@@ -45,6 +46,8 @@ var EntoliOutput = function () {
       for (var i = 0; i < this.template.length; i++) {
         this.render(i);
       }
+
+      this.isSetup = true;
     }
   }, {
     key: "get",
@@ -59,9 +62,12 @@ var EntoliOutput = function () {
     key: "update",
     value: function update() {
       var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      log.info(attributes);
-      this.values = new Map([].concat(_toConsumableArray(this.values), _toConsumableArray(attributes)));
-      this.checkDiff();
+
+      if (this.isSetup) {
+        log.info(attributes);
+        this.values = new Map([].concat(_toConsumableArray(this.values), _toConsumableArray(attributes)));
+        this.checkDiff();
+      }
     }
   }, {
     key: "checkDiff",

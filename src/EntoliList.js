@@ -2,8 +2,6 @@ import { EntoliOutput } from "./EntoliOutput";
 import readline from 'readline';
 import chalk from 'chalk';
 
-const log = require('simple-node-logger').createSimpleFileLogger('project.log');
-
 //could make this return a promise from constructor to eliminate the start function
 export class EntoliList {
     constructor (items) {
