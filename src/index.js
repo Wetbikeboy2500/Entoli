@@ -1,4 +1,4 @@
-import { EntoliList } from './EntoliList';
+import EntoliList from './EntoliList';
 
 //might look werid but I like this design
 let p = new EntoliList([
@@ -7,7 +7,14 @@ let p = new EntoliList([
     })
 ]);
 p.start().then(a => {
-    a();
+    console.log(a);
+    a[1]();
+    setTimeout(() => {
+        p.start().then(a => {
+            console.log(a);
+            a[1]();  
+        });
+    }, 1000);
 });
 
 function helo (i) {

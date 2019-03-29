@@ -3,13 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.EntoliList = void 0;
+exports.default = void 0;
 
 var _EntoliOutput = require("./EntoliOutput");
 
 var _readline = _interopRequireDefault(require("readline"));
 
 var _chalk = _interopRequireDefault(require("chalk"));
+
+var _cluster = require("cluster");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,23 +34,21 @@ var EntoliList = function () {
     _classCallCheck(this, EntoliList);
 
     this.items = items;
-    this.index = 0;
   }
 
   _createClass(EntoliList, [{
     key: "start",
     value: function start() {
+      this.index = 0;
       var that = this;
       return new Promise(function (resolve, reject) {
-        process.stdin.removeAllListeners();
-
         _readline.default.emitKeypressEvents(process.stdin);
 
         process.stdin.setRawMode(true);
         process.stderr.write('\x1B[?25l');
         var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(that.items.map(function (a, i) {
           return ['index' + i, i];
-        })), [['selection', 'null'], ['selected', 0]]));
+        })), [['selection', that.items[0][0]], ['selected', 0]]));
         s.setup([["Select an option"]].concat(_toConsumableArray(that.items.map(function (a, i) {
           return ['    ', function () {
             return s.get('selected') === i ? _chalk.default.green('*') : '-';
@@ -70,8 +70,8 @@ var EntoliList = function () {
             process.stdout.write("Selected option: " + _chalk.default.blue(that.items[that.index][0]));
             process.stdout.moveCursor(0, 1);
             process.stdout.cursorTo(0);
-            process.stdin.removeAllListeners();
-            resolve(that.items[that.index][1]);
+            process.stdin.removeAllListeners(['keypress']);
+            resolve(that.items[that.index]);
           } else {
             if (key.name == 'up') {
               that.index--;
@@ -99,4 +99,4 @@ var EntoliList = function () {
   return EntoliList;
 }();
 
-exports.EntoliList = EntoliList;
+exports.default = EntoliList;

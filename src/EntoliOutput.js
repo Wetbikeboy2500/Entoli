@@ -1,5 +1,3 @@
-const log = require('simple-node-logger').createSimpleFileLogger('project.log');
-
 export class EntoliOutput {
     constructor(attributes = []) {
         this.values = new Map(attributes);
@@ -12,16 +10,14 @@ export class EntoliOutput {
     setup (arr1) {
         this.template = arr1;
 
-        log.info(this.template);
-
         let that = this;
 
         this.output = this.template.map((a, i) => {
             return that.buildOutput(that.template.length - 1 - i);
         });
 
-        for (let i = 0; i < this.template.length; i++) {
-            this.render(i);
+        for (let a of this.output) {
+            process.stdout.write(a + `\n`);
         }
 
         this.isSetup = true;
@@ -35,8 +31,7 @@ export class EntoliOutput {
     }
 
     update (attributes = []) {
-        if (this.isSetup) {
-            log.info(attributes);
+        if (this.isSetup && this.enabled) {
             //attributes override the old and can add new ones
             this.values = new Map([...this.values, ...attributes]);
 
@@ -58,27 +53,27 @@ export class EntoliOutput {
             }
         });
 
-        log.info(difs);
-
         for (let a of difs) {
+            this.clear(a);
             this.render(a);
         }
     }
 
     render (line) {
         if (this.enabled) {
-            this.clear(line);
-            process.stdout.moveCursor(0, line * -1);
+            process.stdout.moveCursor(0, (line * -1) - 1);
             process.stdout.cursorTo(0);
             process.stdout.write(this.output[this.output.length - 1 - line]);
-            process.stdout.moveCursor(0, line);
+            process.stdout.moveCursor(0, line + 1);
         }
     }
 
     clear (line) { //0 is first from bottom, 1 is second, etc.
-        process.stdout.moveCursor(0, line * -1);
-        process.stdout.clearLine(0);
-        process.stdout.moveCursor(0, line);
+        if (this.enabled && this.isSetup) {
+            process.stdout.moveCursor(0, (line * -1) - 1);
+            process.stdout.clearLine(0);
+            process.stdout.moveCursor(0, line + 1);
+        }
     }
 
     buildOutput (line) {

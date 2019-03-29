@@ -19,8 +19,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var log = require('simple-node-logger').createSimpleFileLogger('project.log');
-
 var EntoliOutput = function () {
   function EntoliOutput() {
     var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -37,14 +35,32 @@ var EntoliOutput = function () {
     key: "setup",
     value: function setup(arr1) {
       this.template = arr1;
-      log.info(this.template);
       var that = this;
       this.output = this.template.map(function (a, i) {
         return that.buildOutput(that.template.length - 1 - i);
       });
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      for (var i = 0; i < this.template.length; i++) {
-        this.render(i);
+      try {
+        for (var _iterator = this.output[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var a = _step.value;
+          process.stdout.write(a + "\n");
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
 
       this.isSetup = true;
@@ -63,8 +79,7 @@ var EntoliOutput = function () {
     value: function update() {
       var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-      if (this.isSetup) {
-        log.info(attributes);
+      if (this.isSetup && this.enabled) {
         this.values = new Map([].concat(_toConsumableArray(this.values), _toConsumableArray(attributes)));
         this.checkDiff();
       }
@@ -83,11 +98,11 @@ var EntoliOutput = function () {
           difs.push(line);
         }
       });
-      log.info(difs);
       var _arr = difs;
 
       for (var _i = 0; _i < _arr.length; _i++) {
         var a = _arr[_i];
+        this.clear(a);
         this.render(a);
       }
     }
@@ -95,19 +110,20 @@ var EntoliOutput = function () {
     key: "render",
     value: function render(line) {
       if (this.enabled) {
-        this.clear(line);
-        process.stdout.moveCursor(0, line * -1);
+        process.stdout.moveCursor(0, line * -1 - 1);
         process.stdout.cursorTo(0);
         process.stdout.write(this.output[this.output.length - 1 - line]);
-        process.stdout.moveCursor(0, line);
+        process.stdout.moveCursor(0, line + 1);
       }
     }
   }, {
     key: "clear",
     value: function clear(line) {
-      process.stdout.moveCursor(0, line * -1);
-      process.stdout.clearLine(0);
-      process.stdout.moveCursor(0, line);
+      if (this.enabled && this.isSetup) {
+        process.stdout.moveCursor(0, line * -1 - 1);
+        process.stdout.clearLine(0);
+        process.stdout.moveCursor(0, line + 1);
+      }
     }
   }, {
     key: "buildOutput",
