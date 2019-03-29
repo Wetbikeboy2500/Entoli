@@ -14,6 +14,7 @@ export default class EntoliList {
 
         let that = this;
         return new Promise((resolve, reject) => {
+            process.stdin.resume();
             readline.emitKeypressEvents(process.stdin);
             process.stdin.setRawMode(true);
             process.stderr.write('\x1B[?25l');
@@ -51,6 +52,7 @@ export default class EntoliList {
                     process.stdout.cursorTo(0);
                     //remove all listerners named keypress to eliminate itself
                     process.stdin.removeAllListeners(['keypress']);
+                    process.stdin.pause();
                     resolve(that.items[that.index]);
                 } else {
 
