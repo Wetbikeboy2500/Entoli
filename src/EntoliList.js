@@ -3,6 +3,8 @@ import readline from 'readline';
 import chalk from 'chalk';
 import { removeAllListeners } from "cluster";
 
+//TODO: Might add another layer to the system called interface which would help with the actions to take when ctrl+c is pressed or enter is pressed. These should be standarized inputs and events for the script
+
 //could make this return a promise from constructor to eliminate the start function
 export default class EntoliList {
     constructor(items) {
