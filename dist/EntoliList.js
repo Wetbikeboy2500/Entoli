@@ -42,56 +42,60 @@ var EntoliList = function () {
       this.index = 0;
       var that = this;
       return new Promise(function (resolve, reject) {
-        _readline.default.emitKeypressEvents(process.stdin);
+        try {
+          _readline.default.emitKeypressEvents(process.stdin);
 
-        process.stdin.setRawMode(true);
-        process.stderr.write('\x1B[?25l');
-        var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(that.items.map(function (a, i) {
-          return ['index' + i, i];
-        })), [['selection', that.items[0][0]], ['selected', 0]]));
-        s.setup([["Select an option"]].concat(_toConsumableArray(that.items.map(function (a, i) {
-          return ['    ', function () {
-            return s.get('selected') === i ? _chalk.default.green('*') : '-';
-          }, ') ', a[0]];
-        })), [["Current Selection: ", function () {
-          return _chalk.default.green(s.get('selection'));
-        }]]));
-        process.stdin.on('keypress', function (str, key) {
-          if (key.ctrl && key.name === 'c') {
-            process.stderr.write('\x1B[?25h');
-            s.exit();
-            process.stdin.setRawMode(false);
-            process.stdout.write('Exited the object');
-            process.exit();
-          } else if (key.name == 'return') {
-            process.stderr.write('\x1B[?25h');
-            s.exit();
-            process.stdin.setRawMode(false);
-            process.stdout.write("Selected option: " + _chalk.default.blue(that.items[that.index][0]));
-            process.stdout.moveCursor(0, 1);
-            process.stdout.cursorTo(0);
-            process.stdin.removeAllListeners(['keypress']);
-            resolve(that.items[that.index]);
-          } else {
-            if (key.name == 'up') {
-              that.index--;
+          process.stdin.setRawMode(true);
+          process.stderr.write('\x1B[?25l');
+          var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(that.items.map(function (a, i) {
+            return ['index' + i, i];
+          })), [['selection', that.items[0][0]], ['selected', 0]]));
+          s.setup([["Select an option"]].concat(_toConsumableArray(that.items.map(function (a, i) {
+            return ['    ', function () {
+              return s.get('selected') === i ? _chalk.default.green('*') : '-';
+            }, ') ', a[0]];
+          })), [["Current Selection: ", function () {
+            return _chalk.default.green(s.get('selection'));
+          }]]));
+          process.stdin.on('keypress', function (str, key) {
+            if (key.ctrl && key.name === 'c') {
+              process.stderr.write('\x1B[?25h');
+              s.exit();
+              process.stdin.setRawMode(false);
+              process.stdout.write('Exited the object');
+              process.exit();
+            } else if (key.name == 'return') {
+              process.stderr.write('\x1B[?25h');
+              s.exit();
+              process.stdin.setRawMode(false);
+              process.stdout.write("Selected option: " + _chalk.default.blue(that.items[that.index][0]));
+              process.stdout.moveCursor(0, 1);
+              process.stdout.cursorTo(0);
+              process.stdin.removeAllListeners(['keypress']);
+              resolve(that.items[that.index]);
+            } else {
+              if (key.name == 'up') {
+                that.index--;
+              }
+
+              if (key.name == 'down') {
+                that.index++;
+              }
+
+              if (that.index >= that.items.length) {
+                that.index = 0;
+              }
+
+              if (that.index < 0) {
+                that.index = that.items.length - 1;
+              }
+
+              s.update([['selected', that.index], ['selection', that.items[that.index][0]]]);
             }
-
-            if (key.name == 'down') {
-              that.index++;
-            }
-
-            if (that.index >= that.items.length) {
-              that.index = 0;
-            }
-
-            if (that.index < 0) {
-              that.index = that.items.length - 1;
-            }
-
-            s.update([['selected', that.index], ['selection', that.items[that.index][0]]]);
-          }
-        });
+          });
+        } catch (e) {
+          reject(e);
+        }
       });
     }
   }]);
