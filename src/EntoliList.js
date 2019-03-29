@@ -1,7 +1,6 @@
 import { EntoliOutput } from "./EntoliOutput";
 import readline from 'readline';
 import chalk from 'chalk';
-import { removeAllListeners } from "cluster";
 
 //TODO: Might add another layer to the system called interface which would help with the actions to take when ctrl+c is pressed or enter is pressed. These should be standarized inputs and events for the script
 
@@ -17,6 +16,7 @@ export default class EntoliList {
         let that = this;
         return new Promise((resolve, reject) => {
             try {
+                process.stdin.resume();
                 readline.emitKeypressEvents(process.stdin);
                 process.stdin.setRawMode(true);
                 process.stderr.write('\x1B[?25l');
@@ -53,6 +53,7 @@ export default class EntoliList {
                         process.stdout.cursorTo(0);
                         //remove all listerners named keypress to eliminate itself
                         process.stdin.removeAllListeners(['keypress']);
+                        process.stdin.pause();
                         
                         resolve(that.items[that.index]);
                     } else {
