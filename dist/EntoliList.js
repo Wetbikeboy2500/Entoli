@@ -11,7 +11,7 @@ var _readline = _interopRequireDefault(require("readline"));
 
 var _chalk = _interopRequireDefault(require("chalk"));
 
-var _cluster = require("cluster");
+var _EntolInterface = _interopRequireDefault(require("./EntolInterface"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25,82 +25,56 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+var EntoliList = function EntoliList(items) {
+  var _this = this;
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+  _classCallCheck(this, EntoliList);
 
-var EntoliList = function () {
-  function EntoliList(items) {
-    _classCallCheck(this, EntoliList);
+  this.items = items;
+  return function () {
+    _this.index = 0;
+    return new Promise(function (resolve, reject) {
+      var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(_this.items.map(function (a, i) {
+        return ['index' + i, i];
+      })), [['selection', _this.items[0][0]], ['selected', 0]]));
+      s.setup([["Select an option"]].concat(_toConsumableArray(_this.items.map(function (a, i) {
+        return ['    ', function () {
+          return s.get('selected') === i ? _chalk.default.green('*') : '-';
+        }, ') ', a[0]];
+      })), [["Current Selection: ", function () {
+        return _chalk.default.green(s.get('selection'));
+      }]]));
+      new _EntolInterface.default({
+        exit: function exit() {
+          s.exit();
+        },
+        enter: function enter() {
+          s.exit();
+          process.stdout.write("Selected option: " + _chalk.default.blue(_this.items[_this.index][0]));
+          resolve(_this.items[_this.index]);
+        },
+        update: function update(str, key) {
+          if (key.name == 'up') {
+            _this.index--;
+          }
 
-    this.items = items;
-  }
+          if (key.name == 'down') {
+            _this.index++;
+          }
 
-  _createClass(EntoliList, [{
-    key: "start",
-    value: function start() {
-      this.index = 0;
-      var that = this;
-      return new Promise(function (resolve, reject) {
-        try {
-          _readline.default.emitKeypressEvents(process.stdin);
+          if (_this.index >= _this.items.length) {
+            _this.index = 0;
+          }
 
-          process.stdin.setRawMode(true);
-          process.stderr.write('\x1B[?25l');
-          var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(that.items.map(function (a, i) {
-            return ['index' + i, i];
-          })), [['selection', that.items[0][0]], ['selected', 0]]));
-          s.setup([["Select an option"]].concat(_toConsumableArray(that.items.map(function (a, i) {
-            return ['    ', function () {
-              return s.get('selected') === i ? _chalk.default.green('*') : '-';
-            }, ') ', a[0]];
-          })), [["Current Selection: ", function () {
-            return _chalk.default.green(s.get('selection'));
-          }]]));
-          process.stdin.on('keypress', function (str, key) {
-            if (key.ctrl && key.name === 'c') {
-              process.stderr.write('\x1B[?25h');
-              s.exit();
-              process.stdin.setRawMode(false);
-              process.stdout.write('Exited the object');
-              process.exit();
-            } else if (key.name == 'return') {
-              process.stderr.write('\x1B[?25h');
-              s.exit();
-              process.stdin.setRawMode(false);
-              process.stdout.write("Selected option: " + _chalk.default.blue(that.items[that.index][0]));
-              process.stdout.moveCursor(0, 1);
-              process.stdout.cursorTo(0);
-              process.stdin.removeAllListeners(['keypress']);
-              resolve(that.items[that.index]);
-            } else {
-              if (key.name == 'up') {
-                that.index--;
-              }
+          if (_this.index < 0) {
+            _this.index = _this.items.length - 1;
+          }
 
-              if (key.name == 'down') {
-                that.index++;
-              }
-
-              if (that.index >= that.items.length) {
-                that.index = 0;
-              }
-
-              if (that.index < 0) {
-                that.index = that.items.length - 1;
-              }
-
-              s.update([['selected', that.index], ['selection', that.items[that.index][0]]]);
-            }
-          });
-        } catch (e) {
-          reject(e);
+          s.update([['selected', _this.index], ['selection', _this.items[_this.index][0]]]);
         }
       });
-    }
-  }]);
-
-  return EntoliList;
-}();
+    });
+  };
+};
 
 exports.default = EntoliList;

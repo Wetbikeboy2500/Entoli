@@ -1,88 +1,64 @@
 import { EntoliOutput } from "./EntoliOutput";
 import readline from 'readline';
 import chalk from 'chalk';
+import EntoliInterface from "./EntolInterface";
 
-//TODO: Might add another layer to the system called interface which would help with the actions to take when ctrl+c is pressed or enter is pressed. These should be standarized inputs and events for the script
-
-//could make this return a promise from constructor to eliminate the start function
 export default class EntoliList {
     constructor(items) {
         this.items = items;
-    }
 
-    start () {
-        this.index = 0;
+        return () => {
+            this.index = 0;
 
-        let that = this;
-        return new Promise((resolve, reject) => {
-            try {
-                process.stdin.resume();
-                readline.emitKeypressEvents(process.stdin);
-                process.stdin.setRawMode(true);
-                process.stderr.write('\x1B[?25l');
-
+            return new Promise((resolve, reject) => {
                 let s = new EntoliOutput([
-                    ...that.items.map((a, i) => {
+                    ...this.items.map((a, i) => {
                         return ['index' + i, i];
                     }),
-                    ['selection', that.items[0][0]],
+                    ['selection', this.items[0][0]],
                     ['selected', 0]
                 ]);
                 s.setup([
                     [`Select an option`],
-                    ...that.items.map((a, i) => {
+                    ...this.items.map((a, i) => {
                         return ['    ', () => (s.get('selected') === i) ? chalk.green('*') : '-', ') ', a[0]];
                     }),
                     [`Current Selection: `, () => chalk.green(s.get('selection'))]
                 ]);
 
-                process.stdin.on('keypress', (str, key) => {
-                    if (key.ctrl && key.name === 'c') {
-                        //show cursor
-                        process.stderr.write('\x1B[?25h');
+                new EntoliInterface({
+                    exit: () => {
                         s.exit();
-                        process.stdin.setRawMode(false);
-                        process.stdout.write('Exited the object');
-                        process.exit();
-                    } else if (key.name == 'return') {
-                        process.stderr.write('\x1B[?25h');
+                    },
+                    enter: () => {
                         s.exit();
-                        process.stdin.setRawMode(false);
-                        process.stdout.write(`Selected option: ` + chalk.blue(that.items[that.index][0]));
-                        process.stdout.moveCursor(0, 1);
-                        process.stdout.cursorTo(0);
-                        //remove all listerners named keypress to eliminate itself
-                        process.stdin.removeAllListeners(['keypress']);
-                        process.stdin.pause();
-                        
-                        resolve(that.items[that.index]);
-                    } else {
-
+                        process.stdout.write(`Selected option: ` + chalk.blue(this.items[this.index][0]));
+                        resolve(this.items[this.index]);
+                    },
+                    update: (str, key) => {
                         if (key.name == 'up') {
-                            that.index--;
+                            this.index--;
                         }
 
                         if (key.name == 'down') {
-                            that.index++;
+                            this.index++;
                         }
 
-                        if (that.index >= that.items.length) {
-                            that.index = 0;
+                        if (this.index >= this.items.length) {
+                            this.index = 0;
                         }
 
-                        if (that.index < 0) {
-                            that.index = that.items.length - 1;
+                        if (this.index < 0) {
+                            this.index = this.items.length - 1;
                         }
 
                         s.update([
-                            ['selected', that.index],
-                            ['selection', that.items[that.index][0]]
+                            ['selected', this.index],
+                            ['selection', this.items[this.index][0]]
                         ]);
                     }
                 });
-            } catch (e) {
-                reject(e);
-            }
-        });
+            });
+        };
     }
 }
