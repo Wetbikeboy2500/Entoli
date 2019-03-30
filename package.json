@@ -1,6 +1,6 @@
 {
   "name": "entoli",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Simple Interactive Cli Input",
   "main": "./dist/exports.js",
   "scripts": {
@@ -18,6 +18,15 @@
     "chalk": "^2.4.2",
     "winston": "^3.2.1"
   },
+  "keywords": [
+    "cli",
+    "terminal",
+    "console",
+    "command-line",
+    "prompt",
+    "menu",
+    "interface"
+  ],
   "homepage": "https://github.com/Wetbikeboy2500/Entoli#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
