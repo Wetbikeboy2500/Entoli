@@ -26,6 +26,7 @@ var EntoliOutput = function () {
     _classCallCheck(this, EntoliOutput);
 
     this.values = new Map(attributes);
+    this.line = 0;
     this.output = [];
     this.enabled = true;
     this.isSetup = false;
@@ -39,13 +40,14 @@ var EntoliOutput = function () {
       this.template = arr1;
       var that = this;
       this.output = this.template.map(function (a, i) {
-        return that.buildOutput(that.template.length - 1 - i);
+        return that.buildOutput(i);
       });
       this.output.forEach(function (a, i) {
         if (i + 1 == _this.output.length) {
           process.stdout.write(a);
         } else {
           process.stdout.write(a + "\n");
+          _this.line = _this.line + 1;
         }
       });
       this.isSetup = true;
@@ -75,7 +77,7 @@ var EntoliOutput = function () {
       var difs = [];
       var that = this;
       this.template.forEach(function (a, i) {
-        var line = that.template.length - 1 - i;
+        var line = i;
         var build = that.buildOutput(line);
 
         if (build !== that.output[i]) {
@@ -95,26 +97,24 @@ var EntoliOutput = function () {
     key: "render",
     value: function render(line) {
       if (this.enabled) {
-        process.stdout.moveCursor(0, line * -1);
-        process.stdout.cursorTo(0);
-        process.stdout.write(this.output[this.output.length - 1 - line]);
-        process.stdout.moveCursor(0, line);
+        var m = this.goTo(line);
+        process.stdout.write(this.output[line]);
+        this.changeLine(m);
       }
     }
   }, {
     key: "clear",
     value: function clear(line) {
       if (this.enabled && this.isSetup) {
-        process.stdout.moveCursor(0, line * -1);
+        var m = this.goTo(line);
         process.stdout.clearLine(0);
-        process.stdout.moveCursor(0, line);
+        this.changeLine(m);
       }
     }
   }, {
     key: "buildOutput",
     value: function buildOutput(line) {
-      line = Math.min(this.template.length - 1, line);
-      var data = this.template[this.template.length - 1 - line];
+      var data = this.template[line];
       return data.map(function (a) {
         if (typeof a == 'function') {
           return a();
@@ -127,9 +127,25 @@ var EntoliOutput = function () {
     key: "exit",
     value: function exit() {
       this.enabled = false;
-      process.stdout.moveCursor(0, -this.template.length + 1);
+      process.stdout.moveCursor(0, this.line * -1);
       process.stdout.cursorTo(0);
       process.stdout.clearScreenDown();
+      process.stdout.clearLine(0);
+    }
+  }, {
+    key: "goTo",
+    value: function goTo(line) {
+      var m = this.line - line;
+      process.stdout.moveCursor(0, m * -1);
+      process.stdout.cursorTo(0);
+      this.line = this.line - m;
+      return m;
+    }
+  }, {
+    key: "changeLine",
+    value: function changeLine(x) {
+      process.stdout.moveCursor(0, x);
+      this.line = this.line + x;
     }
   }]);
 
