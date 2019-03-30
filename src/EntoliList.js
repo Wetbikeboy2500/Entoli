@@ -32,7 +32,7 @@ export default class EntoliList {
                     },
                     enter: () => {
                         s.exit();
-                        process.stdout.write(`Selected option: ` + chalk.blue(this.items[this.index][0]));
+                        process.stdout.write(`Selected option: ` + chalk.blue(this.items[this.index][0]) + '\n');
                         resolve(this.items[this.index]);
                     },
                     update: (str, key) => {

@@ -8,9 +8,6 @@ let p = new EntoliList([
     })
 ]);
 
-p().then(a => {
-    console.log(a);
-    d().then(b => {
-        console.log(b);
-    });
+d().then(b => {
+    console.log(b);
 });
