@@ -1,5 +1,4 @@
 import { EntoliOutput } from "./EntoliOutput";
-import readline from 'readline';
 import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 

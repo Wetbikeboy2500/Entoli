@@ -3,7 +3,6 @@ import { EntoliOutput } from './EntoliOutput';
 import EntoliInterface from './EntolInterface';
 import chalk from 'chalk';
 
-//TODO: fixed the one issue with the cursor being in the wrong place, now I just have to render the current cursor in the right place
 export default class SimpleEntoliPrompt {
     constructor(str) {
         this.prompt = str;
@@ -30,7 +29,7 @@ export default class SimpleEntoliPrompt {
                     enter: () => {
                         s.exit();
                         process.stdout.write(`Wrote: ` + chalk.blue(this.answer) + '\n');
-                        resolve(this.answer.trim());
+                        resolve(this.answer);
                     },
                     update: (str, key) => {
                         let name = key.name;

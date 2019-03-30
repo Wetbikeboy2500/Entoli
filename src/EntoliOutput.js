@@ -94,7 +94,7 @@ export class EntoliOutput {
 
     exit () {
         this.enabled = false;
-        process.stdout.moveCursor(0, -this.template.length);
+        process.stdout.moveCursor(0, (-this.template.length) + 1);
         process.stdout.cursorTo(0);
         process.stdout.clearScreenDown();
     }

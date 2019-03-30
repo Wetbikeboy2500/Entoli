@@ -37,7 +37,7 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(str) {
         enter: function enter() {
           s.exit();
           process.stdout.write("Wrote: " + _chalk.default.blue(_this.answer) + '\n');
-          resolve(_this.answer.trim());
+          resolve(_this.answer);
         },
         update: function update(str, key) {
           var name = key.name;
