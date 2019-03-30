@@ -1,19 +1,24 @@
 {
   "name": "entoli",
   "version": "1.1.0",
-  "description": "Cli input thingy",
+  "description": "Simple Interactive Cli Input",
   "main": "./dist/exports.js",
   "scripts": {
     "start": "./node_modules/.bin/babel-node src",
     "build": "./node_modules/.bin/babel --presets @babel/preset-env src --out-dir dist --ignore ./src/index.js",
     "startBuild": "node dist"
   },
-  "author": "",
+  "author": "Wetbikeboy2500",
+  "bugs": {
+    "url": "https://github.com/Wetbikeboy2500/Entoli/issues"
+  },
+  "repository": "github:Wetbikeboy2500/Entoli",
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.4.2",
     "winston": "^3.2.1"
   },
+  "homepage": "https://github.com/Wetbikeboy2500/Entoli#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
