@@ -15,8 +15,7 @@
   "repository": "github:Wetbikeboy2500/Entoli",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.2",
-    "winston": "^3.2.1"
+    "chalk": "^2.4.2"
   },
   "keywords": [
     "cli",

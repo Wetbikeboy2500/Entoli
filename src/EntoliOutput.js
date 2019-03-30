@@ -2,6 +2,8 @@ export class EntoliOutput {
     constructor(attributes = []) {
         this.values = new Map(attributes);
 
+        this.line = 0;
+
         this.output = [];
         this.enabled = true;
         this.isSetup = false;
@@ -13,7 +15,7 @@ export class EntoliOutput {
         let that = this;
 
         this.output = this.template.map((a, i) => {
-            return that.buildOutput(that.template.length - 1 - i);
+            return that.buildOutput(i);
         });
 
         this.output.forEach((a, i) => {
@@ -21,6 +23,7 @@ export class EntoliOutput {
                 process.stdout.write(a);
             } else {
                 process.stdout.write(a + `\n`);
+                this.line = this.line + 1;
             }
         });
 
@@ -49,7 +52,7 @@ export class EntoliOutput {
         let that = this;
 
         this.template.forEach((a, i) => {
-            let line = that.template.length - 1 - i;
+            let line = i;
             let build = that.buildOutput(line);
             if (build !== that.output[i]) {
                 that.output[i] = build;
@@ -65,24 +68,22 @@ export class EntoliOutput {
 
     render (line) {
         if (this.enabled) {
-            process.stdout.moveCursor(0, (line * -1));
-            process.stdout.cursorTo(0);
-            process.stdout.write(this.output[this.output.length - 1 - line]);
-            process.stdout.moveCursor(0, line);
+            let m = this.goTo(line);
+            process.stdout.write(this.output[line]);
+            this.changeLine(m);
         }
     }
 
     clear (line) { //0 is first from bottom, 1 is second, etc.
         if (this.enabled && this.isSetup) {
-            process.stdout.moveCursor(0, (line * -1));
+            let m = this.goTo(line);
             process.stdout.clearLine(0);
-            process.stdout.moveCursor(0, line);
+            this.changeLine(m);
         }
     }
 
     buildOutput (line) {
-        line = Math.min(this.template.length - 1, line); //cannot choose line over length of array
-        let data = this.template[this.template.length - 1 - line];
+        let data = this.template[line];
 
         return data.map((a) => {
             if (typeof a == 'function') {
@@ -94,8 +95,22 @@ export class EntoliOutput {
 
     exit () {
         this.enabled = false;
-        process.stdout.moveCursor(0, (-this.template.length) + 1);
+        process.stdout.moveCursor(0, this.line * -1)
         process.stdout.cursorTo(0);
         process.stdout.clearScreenDown();
+        process.stdout.clearLine(0);
+    }
+
+    goTo (line) {
+        let m = this.line - line;
+        process.stdout.moveCursor(0, m * -1);
+        process.stdout.cursorTo(0);
+        this.line = this.line - m;
+        return m;
+    }
+
+    changeLine (x) {
+        process.stdout.moveCursor(0, x);
+        this.line = this.line + x;
     }
 }

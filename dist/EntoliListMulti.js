@@ -67,6 +67,9 @@ var EntoliListMulti = function EntoliListMulti(items) {
             if (items[index][1] == '***cof*') {
               r.stop();
               s.exit();
+              process.stdout.write('Selected Options: ' + selected.map(function (a) {
+                return items[a][0];
+              }).join(', ') + '\n');
               resolve(selected.map(function (a) {
                 return items[a];
               }));
