@@ -11,7 +11,7 @@ There are too many 'interactive' Clis that skip over the small things. They don'
 npm install entoli
 ```
 ```javascript
-const { EntoliList, EntoliPrompt } = require('entoli');
+const { EntoliList, EntoliPrompt, EntoliListMulti } = require('entoli');
 ```
 
 #### Prompting Methods
