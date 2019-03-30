@@ -1,7 +1,7 @@
 import readline from 'readline';
 
 export default class EntoliInterface {
-    constructor({ update, enter, preenter = null, exit, hideCursor = true }) {
+    constructor({ update, enter, preenter = null, exit, hideCursor = true, catchEnter = true }) {
         this.hideCursor = hideCursor;
         this.start();
 
@@ -9,11 +9,11 @@ export default class EntoliInterface {
             if (key.ctrl && key.name === 'c') {
                 exit()
                 this.exit();
-            } else if (key.name == 'return') {
+            } else if (key.name == 'return' && catchEnter) {
                 if (preenter)
                     preenter();
 
-                this.enter();
+                this.stop();
                 enter();
             } else {
                 update(str, key);
@@ -31,7 +31,7 @@ export default class EntoliInterface {
             process.stderr.write('\x1B[?25l');
     }
 
-    enter () {
+    stop () {
         process.stderr.write('\x1B[?25h');
         process.stdin.setRawMode(false);
         //process.stdout.write(`Selected option: ` + chalk.blue(that.items[that.index][0]));

@@ -25,7 +25,9 @@ var EntoliInterface = function () {
         preenter = _ref$preenter === void 0 ? null : _ref$preenter,
         exit = _ref.exit,
         _ref$hideCursor = _ref.hideCursor,
-        hideCursor = _ref$hideCursor === void 0 ? true : _ref$hideCursor;
+        hideCursor = _ref$hideCursor === void 0 ? true : _ref$hideCursor,
+        _ref$catchEnter = _ref.catchEnter,
+        catchEnter = _ref$catchEnter === void 0 ? true : _ref$catchEnter;
 
     _classCallCheck(this, EntoliInterface);
 
@@ -36,10 +38,10 @@ var EntoliInterface = function () {
         exit();
 
         _this.exit();
-      } else if (key.name == 'return') {
+      } else if (key.name == 'return' && catchEnter) {
         if (preenter) preenter();
 
-        _this.enter();
+        _this.stop();
 
         enter();
       } else {
@@ -59,8 +61,8 @@ var EntoliInterface = function () {
       if (this.hideCursor) process.stderr.write('\x1B[?25l');
     }
   }, {
-    key: "enter",
-    value: function enter() {
+    key: "stop",
+    value: function stop() {
       process.stderr.write('\x1B[?25h');
       process.stdin.setRawMode(false);
       process.stdout.moveCursor(0, 1);

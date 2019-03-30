@@ -15,63 +15,59 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SimpleEntoliPrompt = function SimpleEntoliPrompt(str) {
-  var _this = this;
-
+var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
   _classCallCheck(this, SimpleEntoliPrompt);
 
-  this.prompt = str;
   return function () {
-    _this.answer = '';
-    _this.position = 0;
+    var answer = '';
+    var position = 0;
     return new Promise(function (resolve, reject) {
       var s = new _EntoliOutput.EntoliOutput([['text', '']]);
-      s.setup([[_this.prompt, ' ', function () {
+      s.setup([[prompt, ' ', function () {
         return _chalk.default.green(s.get('text'));
       }]]);
-      process.stdout.cursorTo(_this.prompt.length + _this.position + 1);
+      process.stdout.cursorTo(prompt.length + position + 1);
       new _EntolInterface.default({
         exit: function exit() {
           s.exit();
         },
         enter: function enter() {
           s.exit();
-          process.stdout.write("Wrote: " + _chalk.default.blue(_this.answer) + '\n');
-          resolve(_this.answer);
+          process.stdout.write("Wrote: " + _chalk.default.blue(answer) + '\n');
+          resolve(answer);
         },
         update: function update(str, key) {
           var name = key.name;
           if (str == undefined && name != 'left' && name != 'right') return;
 
           if (name == 'backspace') {
-            var a = _this.answer.split('');
-
-            a.splice(_this.position - 1, 1);
-            _this.answer = a.join('');
-            _this.position -= 1;
+            var a = answer.split('');
+            a.splice(position - 1, 1);
+            answer = a.join('');
+            position -= 1;
           } else if (name == 'left') {
-            _this.position -= 1;
+            position -= 1;
           } else if (name == 'right') {
-            _this.position += 1;
+            position += 1;
           } else {
-            var _a = _this.answer.split('');
+            var _a = answer.split('');
 
-            _a.splice(_this.position, 0, str);
+            _a.splice(position, 0, str);
 
-            _this.answer = _a.join('');
-            _this.position += str.length;
+            answer = _a.join('');
+            position += str.length;
           }
 
-          if (_this.position < 0) {
-            _this.position = 0;
+          if (position < 0) {
+            position = 0;
           }
 
-          if (_this.position >= _this.answer.length) {
-            _this.position = _this.answer.length;
+          if (position >= answer.length) {
+            position = answer.length;
           }
 
-          s.update([['text', _this.answer]]);
-          process.stdout.cursorTo(_this.prompt.length + _this.position + 1);
+          s.update([['text', answer]]);
+          process.stdout.cursorTo(prompt.length + position + 1);
         },
         hideCursor: false
       });

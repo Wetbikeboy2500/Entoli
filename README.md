@@ -1,5 +1,6 @@
 # Entoli
 [![npm version](https://img.shields.io/npm/v/entoli.svg)](https://www.npmjs.com/package/entoli) [![npm license](https://img.shields.io/npm/l/entoli.svg)](https://github.com/Wetbikeboy2500/Entoli/blob/master/LICENSE) [![npm downloads](https://img.shields.io/npm/dt/entoli.svg)](https://www.npmjs.com/package/entoli)
+
 An interactive Cli that pays attention to detail
 
 ### Why?

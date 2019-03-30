@@ -23,31 +23,29 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var EntoliList = function EntoliList(items) {
-  _classCallCheck(this, EntoliList);
+var EntoliListMulti = function EntoliListMulti(items) {
+  _classCallCheck(this, EntoliListMulti);
 
+  items.push(['Confirm', '***cof*']);
   return function () {
     var index = 0;
+    var selected = [];
     return new Promise(function (resolve, reject) {
-      var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(items.map(function (a, i) {
-        return ['index' + i, i];
-      })), [['selection', items[0][0]], ['selected', 0]]));
-      s.setup([["Select an option"]].concat(_toConsumableArray(items.map(function (a, i) {
-        return ['    ', function () {
-          return s.get('selected') === i ? _chalk.default.green('*') : '-';
-        }, ') ', a[0]];
-      })), [["Current Selection: ", function () {
+      var s = new _EntoliOutput.EntoliOutput([['selected', []], ['index', 0], ['selection', '']]);
+      s.setup([['Select an option']].concat(_toConsumableArray(items.map(function (a, i) {
+        return [function () {
+          return s.get('index') == i ? _chalk.default.blue('    > ') : '      ';
+        }, function () {
+          return s.get('selected').includes(i) ? _chalk.default.green(a[0]) : a[0];
+        }];
+      })), [['Current Selections: ', function () {
         return _chalk.default.green(s.get('selection'));
       }]]));
-      new _EntolInterface.default({
+      var r = new _EntolInterface.default({
         exit: function exit() {
           s.exit();
         },
-        enter: function enter() {
-          s.exit();
-          process.stdout.write("Selected option: " + _chalk.default.blue(items[index][0]) + '\n');
-          resolve(items[index]);
-        },
+        catchEnter: false,
         update: function update(str, key) {
           if (key.name == 'up') {
             index--;
@@ -65,11 +63,32 @@ var EntoliList = function EntoliList(items) {
             index = items.length - 1;
           }
 
-          s.update([['selected', index], ['selection', items[index][0]]]);
+          if (key.name == 'return') {
+            if (items[index][1] == '***cof*') {
+              r.stop();
+              s.exit();
+              resolve(selected.map(function (a) {
+                return items[a];
+              }));
+              return;
+            }
+
+            if (!selected.includes(index)) {
+              selected.push(index);
+            } else {
+              selected.splice(selected.findIndex(function (a) {
+                return a == index;
+              }), 1);
+            }
+          }
+
+          s.update([['index', index], ['selected', selected], ['selection', selected.map(function (a) {
+            return items[a][0];
+          }).join(', ')]]);
         }
       });
     });
   };
 };
 
-exports.default = EntoliList;
+exports.default = EntoliListMulti;
