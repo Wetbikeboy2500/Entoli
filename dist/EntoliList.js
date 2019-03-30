@@ -50,7 +50,7 @@ var EntoliList = function EntoliList(items) {
         },
         enter: function enter() {
           s.exit();
-          process.stdout.write("Selected option: " + _chalk.default.blue(_this.items[_this.index][0]));
+          process.stdout.write("Selected option: " + _chalk.default.blue(_this.items[_this.index][0]) + '\n');
           resolve(_this.items[_this.index]);
         },
         update: function update(str, key) {
