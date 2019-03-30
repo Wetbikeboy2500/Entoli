@@ -1,6 +1,6 @@
 {
   "name": "entoli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cli input thingy",
   "main": "./dist/exports.js",
   "scripts": {
