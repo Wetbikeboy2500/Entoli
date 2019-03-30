@@ -1,19 +1,7 @@
-//const { EntoliList, EntoliPrompt } = require('../dist/exports.js');
-import EntoliPrompt from './SimpleEntoliPrompt';
-import EntoliList from './EntoliList';
-import EntoliListMulti from './EntoliListMulti';
+const { EntoliList, EntoliPrompt, EntoliListMulti } = require('../dist/exports.js');
 
-let EP = new EntoliListMulti([
-    ['1', '1'],
-    ['2', '2'],
-    ['3', '3'],
-    ['4', '4'],
-    ['5', '5'],
-    ['6', '6'],
-    ['7', '7'],
-    ['8', '8'],
-    ['9', '9'],
-    ['0', '0'],
-])
+let EP = new EntoliPrompt('How is your day?');
 
-EP().then(a => console.log(a))
+EP().then((a) => {
+    console.log(a);
+});

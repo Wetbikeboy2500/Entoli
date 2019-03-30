@@ -15,31 +15,9 @@ const { EntoliList, EntoliPrompt } = require('entoli');
 ```
 
 #### Prompting Methods
-##### EntoliList
-A simple list where a user can choose an option.
-* Input an array like map to the constructor of the object with a name, value pair
-* Returns a fucntion that, when ran, returns a promise which will resolve with the name, value pair in an array
-###### Example
-```javascript
-const { EntoliList } = require('entoli');
-
-let EL = new EntoliList([
-    ['Name 1', 'Key 1'],
-    ['Name 2', 'Key 2']
-]);
-
-EL().then((a) => {
-    console.log(a);
-});
-```
-![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture.png "Prompt")
-![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture2.png "Output")
-
-###### Issues
-* If the list is longer than the console, there can be weird updates happening as the list is scrolled through
 ##### EntoliPrompt
 A simple question and answer input and output prompt.
-* Input the question into the construcotr of the object as a string
+* Input the question into the constructor of the object as a string
 * Returns the input of the user
 ###### Example
 ```javascript
@@ -55,7 +33,54 @@ EP().then((a) => {
 ![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture4.png "Output")
 
 ###### Issues
-* The wrote part is repetitive and may be made optional in the future
+* The wrote part is sometimes on a new line than where the input was given
+##### EntoliList
+A simple list where a user can choose an option.
+* Input a list of arrays to the constructor of the object with a name/value pair per array
+* Returns a function that, when ran, prompts the user to choose an item from the list
+* The function returns a promise of the users response. The response is a single array with name/value pair.
+###### Example
+```javascript
+const { EntoliList } = require('entoli');
+
+let EL = new EntoliList([
+    ['Name 1', 'Value 1'],
+    ['Name 2', 'Value 2']
+]);
+
+EL().then((a) => {
+    console.log(a);
+});
+```
+![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture.png "Prompt")
+![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture2.png "Output")
+
+###### Issues
+* If the list is longer than the console, there can be weird updates happening as the list is scrolled through
+##### EntoliListMulti
+A simple multi-select repsonse from a list.
+* Input a list of arrays to the constructor of the object with a name/value pair per array
+* Returns a function that, when ran, prompts the user to choose multiple items from the list
+* The function returns a list of arrays with the name/value pairs per array
+###### Example
+```javascript
+const { EntoliListMulti } = require('entoli');
+
+let ELM = new EntoliListMulti([
+    ['Name 1', 'Value 1'],
+    ['Name 2', 'Value 2'],
+    ['Name 3', 'Value 3'],
+    ['Name 4', 'Value 4'],
+    ['Name 5', 'Value 5'],
+]);
+
+ELM().then((a) => {
+    console.log(a);
+});
+```
+
+![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture5.png "Prompt")
+![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture6.png "Output")
 
 #### Inner Design
 The following is extremely technical with the design and process of creating and managing a prompt.
