@@ -34,35 +34,20 @@ var EntoliOutput = function () {
   _createClass(EntoliOutput, [{
     key: "setup",
     value: function setup(arr1) {
+      var _this = this;
+
       this.template = arr1;
       var that = this;
       this.output = this.template.map(function (a, i) {
         return that.buildOutput(that.template.length - 1 - i);
       });
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.output[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var a = _step.value;
+      this.output.forEach(function (a, i) {
+        if (i + 1 == _this.output.length) {
+          process.stdout.write(a);
+        } else {
           process.stdout.write(a + "\n");
         }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
+      });
       this.isSetup = true;
     }
   }, {
@@ -110,19 +95,19 @@ var EntoliOutput = function () {
     key: "render",
     value: function render(line) {
       if (this.enabled) {
-        process.stdout.moveCursor(0, line * -1 - 1);
+        process.stdout.moveCursor(0, line * -1);
         process.stdout.cursorTo(0);
         process.stdout.write(this.output[this.output.length - 1 - line]);
-        process.stdout.moveCursor(0, line + 1);
+        process.stdout.moveCursor(0, line);
       }
     }
   }, {
     key: "clear",
     value: function clear(line) {
       if (this.enabled && this.isSetup) {
-        process.stdout.moveCursor(0, line * -1 - 1);
+        process.stdout.moveCursor(0, line * -1);
         process.stdout.clearLine(0);
-        process.stdout.moveCursor(0, line + 1);
+        process.stdout.moveCursor(0, line);
       }
     }
   }, {

@@ -3,6 +3,7 @@ import { EntoliOutput } from './EntoliOutput';
 import EntoliInterface from './EntolInterface';
 import chalk from 'chalk';
 
+//TODO: fixed the one issue with the cursor being in the wrong place, now I just have to render the current cursor in the right place
 export default class SimpleEntoliPrompt {
     constructor(str) {
         this.prompt = str;
@@ -13,33 +14,18 @@ export default class SimpleEntoliPrompt {
 
             return new Promise((resolve, reject) => {
                 let s = new EntoliOutput([
-                    ['text', ' '],
-                    ['shown', true],
-                    ['position', 0]
+                    ['text', '']
                 ]);
 
                 s.setup([
-                    [this.prompt, ' ', () => {
-                        if (s.get('shown')) {
-                            let a = s.get('text').split('');
-                            a.splice(s.get('position'), 0, chalk.bgWhite(' '));
-                            return chalk.green(a.join(''));
-                        } else {
-                            return chalk.green(s.get('text'));
-                        }
-                    }]
+                    [this.prompt, ' ', () => chalk.green(s.get('text'))]
                 ]);
 
-                //[this.prompt, ' ', () => chalk.green(s.get('text').split('').splice(s.get('position'), 0, (s.get('shown')) ? chalk.bgWhite('_') : '').join(''))]
+                process.stdout.cursorTo(this.prompt.length + this.position + 1);
 
                 new EntoliInterface({
                     exit: () => {
                         s.exit();
-                    },
-                    preenter: () => {
-                        s.update([
-                            ['shown', false]
-                        ]);
                     },
                     enter: () => {
                         s.exit();
@@ -53,7 +39,9 @@ export default class SimpleEntoliPrompt {
                             return;
 
                         if (name == 'backspace') {
-                            this.answer = this.answer.substring(0, this.answer.length - 1);
+                            let a = this.answer.split('');
+                            a.splice(this.position - 1, 1);
+                            this.answer = a.join('');
                             this.position -= 1;
                         } else if (name == 'left') {
                             this.position -= 1;
@@ -76,10 +64,12 @@ export default class SimpleEntoliPrompt {
                         }
 
                         s.update([
-                            ['text', this.answer],
-                            ['position', this.position]
+                            ['text', this.answer]
                         ]);
-                    }
+
+                        process.stdout.cursorTo(this.prompt.length + this.position + 1);
+                    },
+                    hideCursor: false
                 });
             });
         }

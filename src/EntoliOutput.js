@@ -16,9 +16,13 @@ export class EntoliOutput {
             return that.buildOutput(that.template.length - 1 - i);
         });
 
-        for (let a of this.output) {
-            process.stdout.write(a + `\n`);
-        }
+        this.output.forEach((a, i) => {
+            if (i + 1 == this.output.length) {
+                process.stdout.write(a);
+            } else {
+                process.stdout.write(a + `\n`);
+            }
+        });
 
         this.isSetup = true;
     }
@@ -61,18 +65,18 @@ export class EntoliOutput {
 
     render (line) {
         if (this.enabled) {
-            process.stdout.moveCursor(0, (line * -1) - 1);
+            process.stdout.moveCursor(0, (line * -1));
             process.stdout.cursorTo(0);
             process.stdout.write(this.output[this.output.length - 1 - line]);
-            process.stdout.moveCursor(0, line + 1);
+            process.stdout.moveCursor(0, line);
         }
     }
 
     clear (line) { //0 is first from bottom, 1 is second, etc.
         if (this.enabled && this.isSetup) {
-            process.stdout.moveCursor(0, (line * -1) - 1);
+            process.stdout.moveCursor(0, (line * -1));
             process.stdout.clearLine(0);
-            process.stdout.moveCursor(0, line + 1);
+            process.stdout.moveCursor(0, line);
         }
     }
 
