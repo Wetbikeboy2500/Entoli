@@ -7,7 +7,7 @@ export default class EntoliInterface {
 
         process.stdin.on('keypress', (str, key) => {
             if (key.ctrl && key.name === 'c') {
-                exit()
+                exit();
                 this.exit();
             } else if (key.name == 'return' && catchEnter) {
                 if (preenter)
@@ -34,10 +34,6 @@ export default class EntoliInterface {
     stop () {
         process.stderr.write('\x1B[?25h');
         process.stdin.setRawMode(false);
-        //process.stdout.write(`Selected option: ` + chalk.blue(that.items[that.index][0]));
-        process.stdout.moveCursor(0, 1);
-        process.stdout.cursorTo(0);
-        //remove all listerners named keypress to eliminate itself
         process.stdin.removeAllListeners(['keypress']);
         process.stdin.pause();
     }

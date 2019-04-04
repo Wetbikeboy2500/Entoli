@@ -95,10 +95,9 @@ export class EntoliOutput {
 
     exit () {
         this.enabled = false;
-        process.stdout.moveCursor(0, this.line * -1)
-        process.stdout.cursorTo(0);
-        process.stdout.clearScreenDown();
+        this.goTo(0);
         process.stdout.clearLine(0);
+        process.stdout.clearScreenDown();
     }
 
     goTo (line) {
