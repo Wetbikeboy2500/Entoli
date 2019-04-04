@@ -50,6 +50,15 @@ var EntoliOutput = function () {
           _this.line = _this.line + 1;
         }
       });
+      process.stdout.on('resize', function () {
+        _this.output.forEach(function (a, i) {
+          if (process.stdout.rows >= _this.output.length - i) {
+            _this.clear(i);
+
+            _this.render(i);
+          }
+        });
+      });
       this.isSetup = true;
     }
   }, {
@@ -89,8 +98,11 @@ var EntoliOutput = function () {
 
       for (var _i = 0; _i < _arr.length; _i++) {
         var a = _arr[_i];
-        this.clear(a);
-        this.render(a);
+
+        if (process.stdout.rows >= this.output.length - a) {
+          this.clear(a);
+          this.render(a);
+        }
       }
     }
   }, {

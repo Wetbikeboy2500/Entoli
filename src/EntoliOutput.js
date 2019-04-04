@@ -27,6 +27,16 @@ export class EntoliOutput {
             }
         });
 
+
+        process.stdout.on('resize', () => {
+            this.output.forEach((a, i) => {
+                if (process.stdout.rows >= (this.output.length - i)) { //need to fix rendering outside of view
+                    this.clear(i);
+                    this.render(i);
+                }
+            })
+        });
+
         this.isSetup = true;
     }
 
@@ -61,8 +71,10 @@ export class EntoliOutput {
         });
 
         for (let a of difs) {
-            this.clear(a);
-            this.render(a);
+            if (process.stdout.rows >= (this.output.length - a)) { //need to fix rendering outside of view
+                this.clear(a);
+                this.render(a);
+            }
         }
     }
 
