@@ -65,8 +65,6 @@ var EntoliInterface = function () {
     value: function stop() {
       process.stderr.write('\x1B[?25h');
       process.stdin.setRawMode(false);
-      process.stdout.moveCursor(0, 1);
-      process.stdout.cursorTo(0);
       process.stdin.removeAllListeners(['keypress']);
       process.stdin.pause();
     }
