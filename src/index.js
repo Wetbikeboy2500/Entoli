@@ -1,4 +1,3 @@
-import EntoliPrompt from './SimpleEntoliPrompt';
 import EntoliList from './EntoliList';
 
 let El = new EntoliList([

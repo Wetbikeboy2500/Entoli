@@ -1,5 +1,5 @@
 # Entoli
-[![npm version](https://img.shields.io/npm/v/entoli.svg)](https://www.npmjs.com/package/entoli) [![npm license](https://img.shields.io/npm/l/entoli.svg)](https://github.com/Wetbikeboy2500/Entoli/blob/master/LICENSE) [![npm downloads](https://img.shields.io/npm/dt/entoli.svg)](https://www.npmjs.com/package/entoli)
+[![npm version](https://img.shields.io/npm/v/entoli.svg)](https://www.npmjs.com/package/entoli) [![npm license](https://img.shields.io/npm/l/entoli.svg)](https://github.com/Wetbikeboy2500/Entoli/blob/master/LICENSE) [![npm downloads](https://img.shields.io/npm/dt/entoli.svg)](https://www.npmjs.com/package/entoli) [![code size](https://img.shields.io/github/languages/code-size/wetbikeboy2500/entoli.svg)](https://github.com/Wetbikeboy2500/Entoli)
 
 An interactive Cli that pays attention to detail
 

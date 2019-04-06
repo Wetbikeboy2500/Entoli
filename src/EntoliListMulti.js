@@ -10,70 +10,73 @@ export default class EntoliListMulti {
             let selected = [];
 
             return new Promise((resolve, reject) => {
-                let s = new EntoliOutput([
-                    ['selected', []],
-                    ['index', 0],
-                    ['selection', '']
-                ]);
+                try {
+                    let s = new EntoliOutput([
+                        ['selected', []],
+                        ['index', 0],
+                        ['selection', '']
+                    ]);
 
-                s.setup([
-                    ['Select an option'],
-                    ...items.map((a, i) => {
-                        return [() => (s.get('index') == i) ? chalk.blue('    > ') : '      ', () => s.get('selected').includes(i) ? chalk.green(a[0]) : a[0]];
-                    }),
-                    ['Current Selections: ', () => chalk.green(s.get('selection'))]
-                ]);
+                    s.setup([
+                        ['Select an option'],
+                        ...items.map((a, i) => {
+                            return [() => (s.get('index') == i) ? chalk.blue('    > ') : '      ', () => s.get('selected').includes(i) ? chalk.green(a[0]) : a[0]];
+                        }),
+                        ['Current Selections: ', () => chalk.green(s.get('selection'))]
+                    ]);
 
-                let r = new EntoliInterface({
-                    exit: () => {
-                        s.exit();
-                    },
-                    catchEnter: false,
-                    update: (str, key) => {
-                        if (key.name == 'up') {
-                            index--;
-                        }
-
-                        if (key.name == 'down') {
-                            index++;
-                        }
-
-                        if (index >= items.length) {
-                            index = 0;
-                        }
-
-                        if (index < 0) {
-                            index = items.length - 1;
-                        }
-
-                        if (key.name == 'return') {
-                            if (items[index][1] == '***cof*') {
-                                r.stop();
-                                s.exit();
-                                process.stdout.write('Selected Options: ' + selected.map((a) => {
-                                    return items[a][0];
-                                }).join(', ') + '\n');
-                                resolve(selected.map((a) => {
-                                    return items[a];
-                                }));
-                                return;
+                    let r = new EntoliInterface({
+                        exit: () => {
+                            s.exit();
+                        },
+                        catchEnter: false,
+                        update: (str, key) => {
+                            if (key.name == 'up') {
+                                index--;
                             }
 
-                            if (!selected.includes(index)) {
-                                selected.push(index);
-                            } else {
-                                selected.splice(selected.findIndex(a => a == index), 1);
+                            if (key.name == 'down') {
+                                index++;
                             }
+
+                            if (index >= items.length) {
+                                index = 0;
+                            }
+
+                            if (index < 0) {
+                                index = items.length - 1;
+                            }
+
+                            if (key.name == 'return') {
+                                if (items[index][1] == '***cof*') {
+                                    r.stop();
+                                    s.exit();
+                                    process.stdout.write('Selected Options: ' + selected.map((a) => {
+                                        return items[a][0];
+                                    }).join(', ') + '\n');
+                                    resolve(selected.map((a) => {
+                                        return items[a];
+                                    }));
+                                    return;
+                                }
+
+                                if (!selected.includes(index)) {
+                                    selected.push(index);
+                                } else {
+                                    selected.splice(selected.findIndex(a => a == index), 1);
+                                }
+                            }
+
+                            s.update([
+                                ['index', index],
+                                ['selected', selected],
+                                ['selection', selected.map(a => items[a][0]).join(', ')]
+                            ]);
                         }
-
-                        s.update([
-                            ['index', index],
-                            ['selected', selected],
-                            ['selection', selected.map(a => items[a][0]).join(', ')]
-                        ]);
-                    }
-                })
-
+                    });
+                } catch (e) {
+                    reject(e);
+                }
             });
         }
     }
