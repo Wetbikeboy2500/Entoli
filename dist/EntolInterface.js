@@ -27,15 +27,24 @@ var EntoliInterface = function () {
         _ref$hideCursor = _ref.hideCursor,
         hideCursor = _ref$hideCursor === void 0 ? true : _ref$hideCursor,
         _ref$catchEnter = _ref.catchEnter,
-        catchEnter = _ref$catchEnter === void 0 ? true : _ref$catchEnter;
+        catchEnter = _ref$catchEnter === void 0 ? true : _ref$catchEnter,
+        _ref$exitMessage = _ref.exitMessage,
+        exitMessage = _ref$exitMessage === void 0 ? false : _ref$exitMessage,
+        _ref$preventExit = _ref.preventExit,
+        preventExit = _ref$preventExit === void 0 ? false : _ref$preventExit;
 
     _classCallCheck(this, EntoliInterface);
 
     this.hideCursor = hideCursor;
+    this.exitMessage = exitMessage;
+    this.preventExit = preventExit;
     this.start();
-    process.stdin.on('keypress', function (str, key) {
-      if (key.ctrl && key.name === 'c') {
+
+    this.event = function (str, key) {
+      if (key.ctrl && key.name === 'c' || key.code == '[3;;') {
         exit();
+
+        _this.stop();
 
         _this.exit();
       } else if (key.name == 'return' && catchEnter) {
@@ -52,7 +61,9 @@ var EntoliInterface = function () {
 
         update(str, key);
       }
-    });
+    };
+
+    process.stdin.on('keypress', this.event);
   }
 
   _createClass(EntoliInterface, [{
@@ -70,7 +81,7 @@ var EntoliInterface = function () {
     value: function stop() {
       process.stderr.write('\x1B[?25h');
       process.stdin.setRawMode(false);
-      process.stdin.removeAllListeners(['keypress']);
+      process.stdin.removeListener('keypress', this.event);
       process.stdin.pause();
     }
   }, {
@@ -78,8 +89,8 @@ var EntoliInterface = function () {
     value: function exit() {
       process.stderr.write('\x1B[?25h');
       process.stdin.setRawMode(false);
-      process.stdout.write('Exited the object');
-      process.exit();
+      if (this.exitMessage) process.stdout.write('Exited the object');
+      if (!this.preventExit) process.exit();
     }
   }]);
 

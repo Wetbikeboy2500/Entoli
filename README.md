@@ -18,6 +18,10 @@ const { EntoliList, EntoliPrompt, EntoliListMulti } = require('entoli');
 ##### EntoliPrompt
 A simple question and answer input and output prompt.
 * Input the question into the constructor of the object as a string
+* The second parameter in the constructor takes a json object with enterMessage(default true), exitMessage(default true),and preventExit (default false)
+enterMessage - display answer when prompt is confirmed
+exitMessage - display 'Exited the object' when Ctrl+C is pressed
+preventExit - stops process.exit from being called
 * Returns the input of the user
 ###### Example
 ```javascript
@@ -29,6 +33,18 @@ EP().then((a) => {
     console.log(a);
 });
 ```
+or
+```javascript
+const { EntoliPrompt } = require('entoli');
+
+//with all optional parameters set to opposite of default
+let EP = new EntoliPrompt('How is your day?', { enterMessage: false, exitMessage: false, preventExit: true });
+
+EP().then((a) => {
+    console.log(a);
+});
+```
+
 ![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture3.png "Prompt")
 ![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture4.png "Output")
 
@@ -37,6 +53,10 @@ EP().then((a) => {
 ##### EntoliList
 A simple list where a user can choose an option.
 * Input a list of arrays to the constructor of the object with a name/value pair per array
+* The second parameter in the constructor takes a json object with enterMessage(default true), exitMessage(default true),and preventExit (default false)
+enterMessage - display answer when prompt is confirmed
+exitMessage - display 'Exited the object' when Ctrl+C is pressed
+preventExit - stops process.exit from being called
 * Returns a function that, when ran, prompts the user to choose an item from the list
 * The function returns a promise of the users response. The response is a single array with name/value pair.
 ###### Example
@@ -52,6 +72,22 @@ EL().then((a) => {
     console.log(a);
 });
 ```
+or
+```javascript
+const { EntoliList } = require('entoli');
+
+//with all optional parameters set to opposite of default
+let EL = new EntoliList([
+    ['Name 1', 'Value 1'],
+    ['Name 2', 'Value 2']
+], { enterMessage: false, exitMessage: false, preventExit: true });
+
+EL().then((a) => {
+    console.log(a);
+});
+```
+
+
 ![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture.png "Prompt")
 ![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture2.png "Output")
 
@@ -60,6 +96,10 @@ EL().then((a) => {
 ##### EntoliListMulti
 A simple multi-select repsonse from a list.
 * Input a list of arrays to the constructor of the object with a name/value pair per array
+* The second parameter in the constructor takes a json object with enterMessage(default true), exitMessage(default true),and preventExit (default false)
+enterMessage - display answer when prompt is confirmed
+exitMessage - display 'Exited the object' when Ctrl+C is pressed
+preventExit - stops process.exit from being called
 * Returns a function that, when ran, prompts the user to choose multiple items from the list
 * The function returns a list of arrays with the name/value pairs per array
 ###### Example
@@ -73,6 +113,23 @@ let ELM = new EntoliListMulti([
     ['Name 4', 'Value 4'],
     ['Name 5', 'Value 5'],
 ]);
+
+ELM().then((a) => {
+    console.log(a);
+});
+```
+or
+```javascript
+const { EntoliListMulti } = require('entoli');
+
+//with all optional parameters set to opposite of default
+let ELM = new EntoliListMulti([
+    ['Name 1', 'Value 1'],
+    ['Name 2', 'Value 2'],
+    ['Name 3', 'Value 3'],
+    ['Name 4', 'Value 4'],
+    ['Name 5', 'Value 5'],
+], { enterMessage: false, exitMessage: false, preventExit: true });
 
 ELM().then((a) => {
     console.log(a);

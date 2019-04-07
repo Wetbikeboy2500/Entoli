@@ -2,6 +2,8 @@ const stdin = require('mock-stdin').stdin();
 const assert = require('chai').assert;
 const { EntoliList, EntoliPrompt, EntoliListMulti } = require('../dist/exports');
 
+require('events').EventEmitter.defaultMaxListeners = 12;
+
 describe('EntoliList', function () {
     let l = [
         ['1', '1'],
@@ -11,7 +13,7 @@ describe('EntoliList', function () {
         ['5', '5']
     ];
 
-    let El = new EntoliList(l, { enterMessage: false });
+    let El = new EntoliList(l, { enterMessage: false, exitMessage: false, preventExit: true });
     it('Select first element', function (done) {
         El().then((a) => {
             assert.equal(a, l[0]);
@@ -39,10 +41,18 @@ describe('EntoliList', function () {
 
         stdin.send('\u001B[B\u001B[B\r');
     });
+    it('Exit element', function (done) {
+        El().then((a) => {
+            done();
+        })
+            .catch(e => { throw e; });
+
+        stdin.send('\u001B[3;;');
+    });
 });
 
 describe('SimpleEntoliPrompt', function () {
-    let EP = new EntoliPrompt("Test", { enterMessage: false });
+    let EP = new EntoliPrompt("Test", { enterMessage: false, exitMessage: false, preventExit: true });
     it('Correct input output', function (done) {
         EP().then((a) => {
             assert.equal(a, 'test input string ~!@#$%^&*()_+');
@@ -70,6 +80,14 @@ describe('SimpleEntoliPrompt', function () {
 
         stdin.send('test\u001B[D\u001B[D\u001B[D\u001B[W\r');
     });
+    it('Exit element', function (done) {
+        EP().then((a) => {
+            done();
+        })
+            .catch(e => { throw e; });
+
+        stdin.send('\u001B[3;;');
+    });
 });
 
 describe('EntoliListMulti', function () {
@@ -81,7 +99,7 @@ describe('EntoliListMulti', function () {
         ['5', '5']
     ];
 
-    let ELM = new EntoliListMulti(l, { enterMessage: false });
+    let ELM = new EntoliListMulti(l, { enterMessage: false, exitMessage: false, preventExit: true });
     it('Select first option', function (done) {
         ELM().then((a) => {
             assert.deepEqual(a, [l[0]]);
@@ -107,5 +125,13 @@ describe('EntoliListMulti', function () {
         });
 
         stdin.send('\r\r\u001B[B\u001B[B\r\u001B[B\u001B[B\u001B[B\r');
+    });
+    it('Exit element', function (done) {
+        ELM().then((a) => {
+            done();
+        })
+            .catch(e => { throw e; });
+
+        stdin.send('\u001B[3;;');
     });
 });

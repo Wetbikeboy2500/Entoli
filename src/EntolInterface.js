@@ -1,13 +1,16 @@
 import readline from 'readline';
 
 export default class EntoliInterface {
-    constructor({ update, enter, preenter = null, exit, hideCursor = true, catchEnter = true }) {
+    constructor({ update, enter, preenter = null, exit, hideCursor = true, catchEnter = true, exitMessage = false, preventExit = false }) {
         this.hideCursor = hideCursor;
+        this.exitMessage = exitMessage;
+        this.preventExit = preventExit;
         this.start();
 
-        process.stdin.on('keypress', (str, key) => {
-            if (key.ctrl && key.name === 'c') {
+        this.event = (str, key) => {
+            if (key.ctrl && key.name === 'c' || key.code == '[3;;') {
                 exit();
+                this.stop();
                 this.exit();
             } else if (key.name == 'return' && catchEnter) {
                 if (preenter)
@@ -22,7 +25,9 @@ export default class EntoliInterface {
                 }
                 update(str, key);
             }
-        });
+        };
+
+        process.stdin.on('keypress', this.event);
     }
 
     //sets-up the input mode
@@ -38,14 +43,18 @@ export default class EntoliInterface {
     stop () {
         process.stderr.write('\x1B[?25h');
         process.stdin.setRawMode(false);
-        process.stdin.removeAllListeners(['keypress']);
+        process.stdin.removeListener('keypress', this.event);
+        //process.stdin.removeAllListeners(['keypress']);
         process.stdin.pause();
     }
 
     exit () {
         process.stderr.write('\x1B[?25h');
         process.stdin.setRawMode(false);
-        process.stdout.write('Exited the object');
-        process.exit();
+        if (this.exitMessage)
+            process.stdout.write('Exited the object');
+
+        if (!this.preventExit)
+            process.exit();
     }
 }

@@ -5,7 +5,7 @@ import chalk from 'chalk';
 
 export default class SimpleEntoliPrompt {
     constructor(prompt, options = {}) {
-        let { enterMessage = true } = options;
+        let { enterMessage = true, exitMessage = true, preventExit = false } = options;
         return () => {
             let answer = '';
             let position = 0;
@@ -25,6 +25,7 @@ export default class SimpleEntoliPrompt {
                     new EntoliInterface({
                         exit: () => {
                             s.exit();
+                            resolve();
                         },
                         enter: () => {
                             s.exit();
@@ -70,7 +71,9 @@ export default class SimpleEntoliPrompt {
 
                             process.stdout.cursorTo(prompt.length + position + 1);
                         },
-                        hideCursor: false
+                        hideCursor: false,
+                        exitMessage: exitMessage,
+                        preventExit: preventExit
                     });
                 } catch (e) {
                     reject(e);

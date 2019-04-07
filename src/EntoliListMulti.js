@@ -4,7 +4,7 @@ import EntoliInterface from "./EntolInterface";
 
 export default class EntoliListMulti {
     constructor(items, options = {}) {
-        let { enterMessage = true } = options;
+        let { enterMessage = true, exitMessage = true, preventExit = false } = options;
         items.push(['Confirm', '***cof*']);
         return () => {
             let index = 0;
@@ -29,6 +29,7 @@ export default class EntoliListMulti {
                     let r = new EntoliInterface({
                         exit: () => {
                             s.exit();
+                            resolve();
                         },
                         catchEnter: false,
                         update: (str, key) => {
@@ -75,7 +76,9 @@ export default class EntoliListMulti {
                                 ['selected', selected],
                                 ['selection', selected.map(a => items[a][0]).join(', ')]
                             ]);
-                        }
+                        },
+                        exitMessage: exitMessage,
+                        preventExit: preventExit
                     });
                 } catch (e) {
                     reject(e);

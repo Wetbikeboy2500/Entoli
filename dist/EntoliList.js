@@ -29,7 +29,11 @@ var EntoliList = function EntoliList(items) {
   _classCallCheck(this, EntoliList);
 
   var _options$enterMessage = options.enterMessage,
-      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage;
+      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage,
+      _options$exitMessage = options.exitMessage,
+      exitMessage = _options$exitMessage === void 0 ? true : _options$exitMessage,
+      _options$preventExit = options.preventExit,
+      preventExit = _options$preventExit === void 0 ? false : _options$preventExit;
   return function () {
     var index = 0;
     return new Promise(function (resolve, reject) {
@@ -47,6 +51,7 @@ var EntoliList = function EntoliList(items) {
         new _EntolInterface.default({
           exit: function exit() {
             s.exit();
+            resolve();
           },
           enter: function enter() {
             s.exit();
@@ -71,7 +76,9 @@ var EntoliList = function EntoliList(items) {
             }
 
             s.update([['selected', index], ['selection', items[index][0]]]);
-          }
+          },
+          exitMessage: exitMessage,
+          preventExit: preventExit
         });
       } catch (e) {
         reject(e);

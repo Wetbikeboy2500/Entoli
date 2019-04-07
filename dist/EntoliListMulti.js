@@ -29,7 +29,11 @@ var EntoliListMulti = function EntoliListMulti(items) {
   _classCallCheck(this, EntoliListMulti);
 
   var _options$enterMessage = options.enterMessage,
-      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage;
+      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage,
+      _options$exitMessage = options.exitMessage,
+      exitMessage = _options$exitMessage === void 0 ? true : _options$exitMessage,
+      _options$preventExit = options.preventExit,
+      preventExit = _options$preventExit === void 0 ? false : _options$preventExit;
   items.push(['Confirm', '***cof*']);
   return function () {
     var index = 0;
@@ -49,6 +53,7 @@ var EntoliListMulti = function EntoliListMulti(items) {
         var r = new _EntolInterface.default({
           exit: function exit() {
             s.exit();
+            resolve();
           },
           catchEnter: false,
           update: function update(str, key) {
@@ -93,7 +98,9 @@ var EntoliListMulti = function EntoliListMulti(items) {
             s.update([['index', index], ['selected', selected], ['selection', selected.map(function (a) {
               return items[a][0];
             }).join(', ')]]);
-          }
+          },
+          exitMessage: exitMessage,
+          preventExit: preventExit
         });
       } catch (e) {
         reject(e);

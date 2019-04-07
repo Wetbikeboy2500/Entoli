@@ -21,7 +21,11 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
   _classCallCheck(this, SimpleEntoliPrompt);
 
   var _options$enterMessage = options.enterMessage,
-      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage;
+      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage,
+      _options$exitMessage = options.exitMessage,
+      exitMessage = _options$exitMessage === void 0 ? true : _options$exitMessage,
+      _options$preventExit = options.preventExit,
+      preventExit = _options$preventExit === void 0 ? false : _options$preventExit;
   return function () {
     var answer = '';
     var position = 0;
@@ -35,6 +39,7 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
         new _EntolInterface.default({
           exit: function exit() {
             s.exit();
+            resolve();
           },
           enter: function enter() {
             s.exit();
@@ -74,7 +79,9 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
             s.update([['text', answer]]);
             process.stdout.cursorTo(prompt.length + position + 1);
           },
-          hideCursor: false
+          hideCursor: false,
+          exitMessage: exitMessage,
+          preventExit: preventExit
         });
       } catch (e) {
         reject(e);

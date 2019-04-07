@@ -4,7 +4,7 @@ import EntoliInterface from "./EntolInterface";
 
 export default class EntoliList {
     constructor(items, options = {}) {
-        let { enterMessage = true } = options;
+        let { enterMessage = true, exitMessage = true, preventExit = false } = options;
         return () => {
             let index = 0;
 
@@ -28,6 +28,7 @@ export default class EntoliList {
                     new EntoliInterface({
                         exit: () => {
                             s.exit();
+                            resolve();
                         },
                         enter: () => {
                             s.exit();
@@ -57,7 +58,9 @@ export default class EntoliList {
                                 ['selected', index],
                                 ['selection', items[index][0]]
                             ]);
-                        }
+                        },
+                        exitMessage: exitMessage,
+                        preventExit: preventExit
                     });
                 } catch (e) {
                     reject(e);
