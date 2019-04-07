@@ -1,36 +1,6 @@
-import EntoliList from './EntoliList';
+import EntoliPrompt from './SimpleEntoliPrompt';
 
-let El = new EntoliList([
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c'],
-    ['v', 'c']
-]);
+let El = new EntoliPrompt('h', { enterMessage: false })
 
-El().then(a => {
-    console.log(a);
-});
+El().then((a) => {});
+

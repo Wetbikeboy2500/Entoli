@@ -16,6 +16,10 @@ export default class EntoliInterface {
                 this.stop();
                 enter();
             } else {
+                if (key.code == '[W') {
+                    key.name = 'backspace';
+                    str = '';
+                }
                 update(str, key);
             }
         });

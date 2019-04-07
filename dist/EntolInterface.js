@@ -45,6 +45,11 @@ var EntoliInterface = function () {
 
         enter();
       } else {
+        if (key.code == '[W') {
+          key.name = 'backspace';
+          str = '';
+        }
+
         update(str, key);
       }
     });

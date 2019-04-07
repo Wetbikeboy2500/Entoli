@@ -3,7 +3,8 @@ import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 
 export default class EntoliListMulti {
-    constructor(items) {
+    constructor(items, options = {}) {
+        let { enterMessage = true } = options;
         items.push(['Confirm', '***cof*']);
         return () => {
             let index = 0;
@@ -51,9 +52,11 @@ export default class EntoliListMulti {
                                 if (items[index][1] == '***cof*') {
                                     r.stop();
                                     s.exit();
-                                    process.stdout.write('Selected Options: ' + selected.map((a) => {
-                                        return items[a][0];
-                                    }).join(', ') + '\n');
+                                    if (enterMessage)
+                                        process.stdout.write('Selected Options: ' + selected.map((a) => {
+                                            return items[a][0];
+                                        }).join(', ') + '\n');
+
                                     resolve(selected.map((a) => {
                                         return items[a];
                                     }));

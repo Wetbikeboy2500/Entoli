@@ -24,72 +24,80 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EntoliListMulti = function EntoliListMulti(items) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
   _classCallCheck(this, EntoliListMulti);
 
+  var _options$enterMessage = options.enterMessage,
+      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage;
   items.push(['Confirm', '***cof*']);
   return function () {
     var index = 0;
     var selected = [];
     return new Promise(function (resolve, reject) {
-      var s = new _EntoliOutput.EntoliOutput([['selected', []], ['index', 0], ['selection', '']]);
-      s.setup([['Select an option']].concat(_toConsumableArray(items.map(function (a, i) {
-        return [function () {
-          return s.get('index') == i ? _chalk.default.blue('    > ') : '      ';
-        }, function () {
-          return s.get('selected').includes(i) ? _chalk.default.green(a[0]) : a[0];
-        }];
-      })), [['Current Selections: ', function () {
-        return _chalk.default.green(s.get('selection'));
-      }]]));
-      var r = new _EntolInterface.default({
-        exit: function exit() {
-          s.exit();
-        },
-        catchEnter: false,
-        update: function update(str, key) {
-          if (key.name == 'up') {
-            index--;
-          }
-
-          if (key.name == 'down') {
-            index++;
-          }
-
-          if (index >= items.length) {
-            index = 0;
-          }
-
-          if (index < 0) {
-            index = items.length - 1;
-          }
-
-          if (key.name == 'return') {
-            if (items[index][1] == '***cof*') {
-              r.stop();
-              s.exit();
-              process.stdout.write('Selected Options: ' + selected.map(function (a) {
-                return items[a][0];
-              }).join(', ') + '\n');
-              resolve(selected.map(function (a) {
-                return items[a];
-              }));
-              return;
+      try {
+        var s = new _EntoliOutput.EntoliOutput([['selected', []], ['index', 0], ['selection', '']]);
+        s.setup([['Select an option']].concat(_toConsumableArray(items.map(function (a, i) {
+          return [function () {
+            return s.get('index') == i ? _chalk.default.blue('    > ') : '      ';
+          }, function () {
+            return s.get('selected').includes(i) ? _chalk.default.green(a[0]) : a[0];
+          }];
+        })), [['Current Selections: ', function () {
+          return _chalk.default.green(s.get('selection'));
+        }]]));
+        var r = new _EntolInterface.default({
+          exit: function exit() {
+            s.exit();
+          },
+          catchEnter: false,
+          update: function update(str, key) {
+            if (key.name == 'up') {
+              index--;
             }
 
-            if (!selected.includes(index)) {
-              selected.push(index);
-            } else {
-              selected.splice(selected.findIndex(function (a) {
-                return a == index;
-              }), 1);
+            if (key.name == 'down') {
+              index++;
             }
-          }
 
-          s.update([['index', index], ['selected', selected], ['selection', selected.map(function (a) {
-            return items[a][0];
-          }).join(', ')]]);
-        }
-      });
+            if (index >= items.length) {
+              index = 0;
+            }
+
+            if (index < 0) {
+              index = items.length - 1;
+            }
+
+            if (key.name == 'return') {
+              if (items[index][1] == '***cof*') {
+                r.stop();
+                s.exit();
+                if (enterMessage) process.stdout.write('Selected Options: ' + selected.map(function (a) {
+                  return items[a][0];
+                }).join(', ') + '\n');
+                resolve(selected.map(function (a) {
+                  return items[a];
+                }));
+                return;
+              }
+
+              if (!selected.includes(index)) {
+                selected.push(index);
+              } else {
+                selected.splice(selected.findIndex(function (a) {
+                  return a == index;
+                }), 1);
+              }
+            }
+
+            s.update([['index', index], ['selected', selected], ['selection', selected.map(function (a) {
+              return items[a][0];
+            }).join(', ')]]);
+          }
+        });
+      } catch (e) {
+        reject(e);
+      }
     });
   };
 };

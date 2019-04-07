@@ -4,7 +4,8 @@ import EntoliInterface from './EntolInterface';
 import chalk from 'chalk';
 
 export default class SimpleEntoliPrompt {
-    constructor(prompt) {
+    constructor(prompt, options = {}) {
+        let { enterMessage = true } = options;
         return () => {
             let answer = '';
             let position = 0;
@@ -27,7 +28,9 @@ export default class SimpleEntoliPrompt {
                         },
                         enter: () => {
                             s.exit();
-                            process.stdout.write(`Wrote: ` + chalk.blue(answer) + '\n');
+                            if (enterMessage)
+                                process.stdout.write(`Wrote: ` + chalk.blue(answer) + '\n');
+
                             resolve(answer);
                         },
                         update: (str, key) => {

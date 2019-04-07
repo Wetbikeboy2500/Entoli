@@ -3,7 +3,8 @@ import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 
 export default class EntoliList {
-    constructor(items) {
+    constructor(items, options = {}) {
+        let { enterMessage = true } = options;
         return () => {
             let index = 0;
 
@@ -30,7 +31,9 @@ export default class EntoliList {
                         },
                         enter: () => {
                             s.exit();
-                            process.stdout.write(`Selected option: ` + chalk.blue(items[index][0]) + '\n');
+                            if (enterMessage)
+                                process.stdout.write(`Selected option: ` + chalk.blue(items[index][0]) + '\n');
+
                             resolve(items[index]);
                         },
                         update: (str, key) => {

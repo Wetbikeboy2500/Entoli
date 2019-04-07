@@ -16,61 +16,69 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
   _classCallCheck(this, SimpleEntoliPrompt);
 
+  var _options$enterMessage = options.enterMessage,
+      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage;
   return function () {
     var answer = '';
     var position = 0;
     return new Promise(function (resolve, reject) {
-      var s = new _EntoliOutput.EntoliOutput([['text', '']]);
-      s.setup([[prompt, ' ', function () {
-        return _chalk.default.green(s.get('text'));
-      }]]);
-      process.stdout.cursorTo(prompt.length + position + 1);
-      new _EntolInterface.default({
-        exit: function exit() {
-          s.exit();
-        },
-        enter: function enter() {
-          s.exit();
-          process.stdout.write("Wrote: " + _chalk.default.blue(answer) + '\n');
-          resolve(answer);
-        },
-        update: function update(str, key) {
-          var name = key.name;
-          if (str == undefined && name != 'left' && name != 'right') return;
+      try {
+        var s = new _EntoliOutput.EntoliOutput([['text', '']]);
+        s.setup([[prompt, ' ', function () {
+          return _chalk.default.green(s.get('text'));
+        }]]);
+        process.stdout.cursorTo(prompt.length + position + 1);
+        new _EntolInterface.default({
+          exit: function exit() {
+            s.exit();
+          },
+          enter: function enter() {
+            s.exit();
+            if (enterMessage) process.stdout.write("Wrote: " + _chalk.default.blue(answer) + '\n');
+            resolve(answer);
+          },
+          update: function update(str, key) {
+            var name = key.name;
+            if (str == undefined && name != 'left' && name != 'right') return;
 
-          if (name == 'backspace') {
-            var a = answer.split('');
-            a.splice(position - 1, 1);
-            answer = a.join('');
-            position -= 1;
-          } else if (name == 'left') {
-            position -= 1;
-          } else if (name == 'right') {
-            position += 1;
-          } else {
-            var _a = answer.split('');
+            if (name == 'backspace') {
+              var a = answer.split('');
+              a.splice(position - 1, 1);
+              answer = a.join('');
+              position -= 1;
+            } else if (name == 'left') {
+              position -= 1;
+            } else if (name == 'right') {
+              position += 1;
+            } else {
+              var _a = answer.split('');
 
-            _a.splice(position, 0, str);
+              _a.splice(position, 0, str);
 
-            answer = _a.join('');
-            position += str.length;
-          }
+              answer = _a.join('');
+              position += str.length;
+            }
 
-          if (position < 0) {
-            position = 0;
-          }
+            if (position < 0) {
+              position = 0;
+            }
 
-          if (position >= answer.length) {
-            position = answer.length;
-          }
+            if (position >= answer.length) {
+              position = answer.length;
+            }
 
-          s.update([['text', answer]]);
-          process.stdout.cursorTo(prompt.length + position + 1);
-        },
-        hideCursor: false
-      });
+            s.update([['text', answer]]);
+            process.stdout.cursorTo(prompt.length + position + 1);
+          },
+          hideCursor: false
+        });
+      } catch (e) {
+        reject(e);
+      }
     });
   };
 };
