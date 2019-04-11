@@ -1,6 +1,10 @@
 import EntoliPrompt from './SimpleEntoliPrompt';
+import EntoliMultiPrompt from './EntoliMultiPrompt';
 
-let El = new EntoliPrompt('h');
+let El = EntoliPrompt('h');
 
-El().then((a) => {});
+EntoliMultiPrompt([
+    El,
+    El,
+]).then((a) => console.log(a));
 

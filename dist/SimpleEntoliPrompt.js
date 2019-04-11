@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = SimpleEntoliPrompt;
 
 var _EntoliOutput = require("./EntoliOutput");
 
@@ -13,19 +13,13 @@ var _chalk = _interopRequireDefault(require("chalk"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  _classCallCheck(this, SimpleEntoliPrompt);
-
-  var _options$enterMessage = options.enterMessage,
-      enterMessage = _options$enterMessage === void 0 ? true : _options$enterMessage,
-      _options$exitMessage = options.exitMessage,
-      exitMessage = _options$exitMessage === void 0 ? true : _options$exitMessage,
-      _options$preventExit = options.preventExit,
-      preventExit = _options$preventExit === void 0 ? false : _options$preventExit;
+function SimpleEntoliPrompt(prompt, _ref) {
+  var _ref$enterMessage = _ref.enterMessage,
+      enterMessage = _ref$enterMessage === void 0 ? true : _ref$enterMessage,
+      _ref$exitMessage = _ref.exitMessage,
+      exitMessage = _ref$exitMessage === void 0 ? true : _ref$exitMessage,
+      _ref$preventExit = _ref.preventExit,
+      preventExit = _ref$preventExit === void 0 ? false : _ref$preventExit;
   return function () {
     var answer = '';
     var position = 0;
@@ -88,6 +82,4 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
       }
     });
   };
-};
-
-exports.default = SimpleEntoliPrompt;
+}
