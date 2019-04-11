@@ -17,7 +17,7 @@ const { EntoliList, EntoliPrompt, EntoliListMulti } = require('entoli');
 #### Prompting Methods
 ##### EntoliPrompt
 A simple question and answer input and output prompt.
-* Input the question into the constructor of the object as a string
+* Input the question as first parameter of the function
 * The second parameter in the constructor takes a json object with enterMessage(default true), exitMessage(default true),and preventExit (default false)
 
 enterMessage - display answer when prompt is confirmed
@@ -30,7 +30,7 @@ preventExit - stops process.exit from being called
 ```javascript
 const { EntoliPrompt } = require('entoli');
 
-let EP = new EntoliPrompt('How is your day?');
+let EP = EntoliPrompt('How is your day?');
 
 EP().then((a) => {
     console.log(a);
@@ -41,7 +41,7 @@ or
 const { EntoliPrompt } = require('entoli');
 
 //with all optional parameters set to opposite of default
-let EP = new EntoliPrompt('How is your day?', { enterMessage: false, exitMessage: false, preventExit: true });
+let EP = EntoliPrompt('How is your day?', { enterMessage: false, exitMessage: false, preventExit: true });
 
 EP().then((a) => {
     console.log(a);
@@ -83,7 +83,7 @@ or
 const { EntoliList } = require('entoli');
 
 //with all optional parameters set to opposite of default
-let EL = new EntoliList([
+let EL = EntoliList([
     ['Name 1', 'Value 1'],
     ['Name 2', 'Value 2']
 ], { enterMessage: false, exitMessage: false, preventExit: true });
@@ -98,7 +98,7 @@ EL().then((a) => {
 ![alt text](http://u.cubeupload.com/wetbikeboy2500/Capture2.png "Output")
 
 ###### Issues
-* If the list is longer than the console, there can be weird updates happening as the list is scrolled through
+* When the console is resized and the list is larger than console, weird strings are left behind. This seems to be an issue with almost all consoles and projects similar to this.
 ##### EntoliListMulti
 A simple multi-select repsonse from a list.
 * Input a list of arrays to the constructor of the object with a name/value pair per array
@@ -132,7 +132,7 @@ or
 const { EntoliListMulti } = require('entoli');
 
 //with all optional parameters set to opposite of default
-let ELM = new EntoliListMulti([
+let ELM = EntoliListMulti([
     ['Name 1', 'Value 1'],
     ['Name 2', 'Value 2'],
     ['Name 3', 'Value 3'],

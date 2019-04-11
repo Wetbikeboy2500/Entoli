@@ -7,4 +7,3 @@ EntoliMultiPrompt([
     El,
     El,
 ]).then((a) => console.log(a));
-
