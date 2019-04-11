@@ -2,7 +2,7 @@ import { EntoliOutput } from "./EntoliOutput";
 import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 
-export default function EntoliListMulti (items, { enterMessage = true, exitMessage = true, preventExit = false }) {
+export default function EntoliListMulti (items, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
     items.push(['Confirm', '***cof*']);
     return () => {
         let index = 0;

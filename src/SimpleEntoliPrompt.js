@@ -2,7 +2,7 @@ import { EntoliOutput } from './EntoliOutput';
 import EntoliInterface from './EntolInterface';
 import chalk from 'chalk';
 
-export default function SimpleEntoliPrompt (prompt, { enterMessage = true, exitMessage = true, preventExit = false }) {
+export default function SimpleEntoliPrompt (prompt, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
     return () => {
         let answer = '';
         let position = 0;

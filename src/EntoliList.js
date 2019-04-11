@@ -2,7 +2,7 @@ import { EntoliOutput } from "./EntoliOutput";
 import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 
-export default function EntoliList (items, { enterMessage = true, exitMessage = true, preventExit = false }) {
+export default function EntoliList (items, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
     return () => {
         let index = 0;
 

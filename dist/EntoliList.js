@@ -21,13 +21,15 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function EntoliList(items, _ref) {
-  var _ref$enterMessage = _ref.enterMessage,
+function EntoliList(items) {
+  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      _ref$enterMessage = _ref.enterMessage,
       enterMessage = _ref$enterMessage === void 0 ? true : _ref$enterMessage,
       _ref$exitMessage = _ref.exitMessage,
       exitMessage = _ref$exitMessage === void 0 ? true : _ref$exitMessage,
       _ref$preventExit = _ref.preventExit,
       preventExit = _ref$preventExit === void 0 ? false : _ref$preventExit;
+
   return function () {
     var index = 0;
     return new Promise(function (resolve, reject) {

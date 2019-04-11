@@ -13,13 +13,15 @@ var _chalk = _interopRequireDefault(require("chalk"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function SimpleEntoliPrompt(prompt, _ref) {
-  var _ref$enterMessage = _ref.enterMessage,
+function SimpleEntoliPrompt(prompt) {
+  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      _ref$enterMessage = _ref.enterMessage,
       enterMessage = _ref$enterMessage === void 0 ? true : _ref$enterMessage,
       _ref$exitMessage = _ref.exitMessage,
       exitMessage = _ref$exitMessage === void 0 ? true : _ref$exitMessage,
       _ref$preventExit = _ref.preventExit,
       preventExit = _ref$preventExit === void 0 ? false : _ref$preventExit;
+
   return function () {
     var answer = '';
     var position = 0;
