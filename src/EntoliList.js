@@ -1,6 +1,7 @@
 import { EntoliOutput } from "./EntoliOutput";
 import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
+import { EntoliIndent as Indent } from './EntoliUtil';
 
 export default function EntoliList (items, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
     return () => {
@@ -8,18 +9,29 @@ export default function EntoliList (items, { enterMessage = true, exitMessage = 
 
         return new Promise((resolve, reject) => {
             try {
+                let selectionOptions = items.filter(a => typeof a != 'function');
+
                 let s = new EntoliOutput([
-                    ...items.map((a, i) => {
+                    ...selectionOptions.map((a, i) => {
                         return ['index' + i, i];
                     }),
-                    ['selection', items[0][0]],
+                    ['selection', selectionOptions[0][0]],
                     ['selected', 0]
                 ]);
+
+                let tmp = selectionOptions.map((a, i) => {
+                    return [Indent(), () => (s.get('selected') === i) ? chalk.green('*') : '-', ') ', a[0]];
+                });
+
+                items.forEach((a, i) => {
+                    if (typeof a == 'function') {
+                        tmp.splice(i, 0, [a()]);
+                    }
+                });
+
                 s.setup([
                     [`Select an option`],
-                    ...items.map((a, i) => {
-                        return ['    ', () => (s.get('selected') === i) ? chalk.green('*') : '-', ') ', a[0]];
-                    }),
+                    ...tmp,
                     [`Current Selection: `, () => chalk.green(s.get('selection'))]
                 ]);
 
@@ -31,9 +43,9 @@ export default function EntoliList (items, { enterMessage = true, exitMessage = 
                     enter: () => {
                         s.exit();
                         if (enterMessage)
-                            process.stdout.write(`Selected option: ` + chalk.blue(items[index][0]) + '\n');
+                            process.stdout.write(`Selected option: ` + chalk.blue(selectionOptions[index][0]) + '\n');
 
-                        resolve(items[index]);
+                        resolve(selectionOptions[index]);
                     },
                     update: (str, key) => {
                         if (key.name == 'up') {
@@ -44,17 +56,17 @@ export default function EntoliList (items, { enterMessage = true, exitMessage = 
                             index++;
                         }
 
-                        if (index >= items.length) {
+                        if (index >= selectionOptions.length) {
                             index = 0;
                         }
 
                         if (index < 0) {
-                            index = items.length - 1;
+                            index = selectionOptions.length - 1;
                         }
 
                         s.update([
                             ['selected', index],
-                            ['selection', items[index][0]]
+                            ['selection', selectionOptions[index][0]]
                         ]);
                     },
                     exitMessage: exitMessage,

@@ -10,17 +10,27 @@ export default function EntoliListMulti (items, { enterMessage = true, exitMessa
 
         return new Promise((resolve, reject) => {
             try {
+               let selectionOptions = items.filter(a => typeof a != 'function');
+
                 let s = new EntoliOutput([
                     ['selected', []],
                     ['index', 0],
                     ['selection', '']
                 ]);
 
+                let tmp = selectionOptions.map((a, i) => {
+                    return [() => (s.get('index') == i) ? chalk.blue('    > ') : '      ', () => s.get('selected').includes(i) ? chalk.green(a[0]) : a[0]];
+                });
+
+                items.forEach((a, i) => {
+                    if (typeof a == 'function') {
+                        tmp.splice(i, 0, [a()]);
+                    }
+                });
+
                 s.setup([
                     ['Select an option'],
-                    ...items.map((a, i) => {
-                        return [() => (s.get('index') == i) ? chalk.blue('    > ') : '      ', () => s.get('selected').includes(i) ? chalk.green(a[0]) : a[0]];
-                    }),
+                    ...tmp,
                     ['Current Selections: ', () => chalk.green(s.get('selection'))]
                 ]);
 
@@ -39,25 +49,25 @@ export default function EntoliListMulti (items, { enterMessage = true, exitMessa
                             index++;
                         }
 
-                        if (index >= items.length) {
+                        if (index >= selectionOptions.length) {
                             index = 0;
                         }
 
                         if (index < 0) {
-                            index = items.length - 1;
+                            index = selectionOptions.length - 1;
                         }
 
                         if (key.name == 'return') {
-                            if (items[index][1] == '***cof*') {
+                            if (selectionOptions[index][1] == '***cof*') {
                                 r.stop();
                                 s.exit();
                                 if (enterMessage)
                                     process.stdout.write('Selected Options: ' + selected.map((a) => {
-                                        return items[a][0];
+                                        return selectionOptions[a][0];
                                     }).join(', ') + '\n');
 
                                 resolve(selected.map((a) => {
-                                    return items[a];
+                                    return selectionOptions[a];
                                 }));
                                 return;
                             }
@@ -72,7 +82,7 @@ export default function EntoliListMulti (items, { enterMessage = true, exitMessa
                         s.update([
                             ['index', index],
                             ['selected', selected],
-                            ['selection', selected.map(a => items[a][0]).join(', ')]
+                            ['selection', selected.map(a => selectionOptions[a][0]).join(', ')]
                         ]);
                     },
                     exitMessage: exitMessage,

@@ -11,6 +11,8 @@ var _chalk = _interopRequireDefault(require("chalk"));
 
 var _EntolInterface = _interopRequireDefault(require("./EntolInterface"));
 
+var _EntoliUtil = require("./EntoliUtil");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -34,14 +36,23 @@ function EntoliList(items) {
     var index = 0;
     return new Promise(function (resolve, reject) {
       try {
-        var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(items.map(function (a, i) {
+        var selectionOptions = items.filter(function (a) {
+          return typeof a != 'function';
+        });
+        var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(selectionOptions.map(function (a, i) {
           return ['index' + i, i];
-        })), [['selection', items[0][0]], ['selected', 0]]));
-        s.setup([["Select an option"]].concat(_toConsumableArray(items.map(function (a, i) {
-          return ['    ', function () {
+        })), [['selection', selectionOptions[0][0]], ['selected', 0]]));
+        var tmp = selectionOptions.map(function (a, i) {
+          return [(0, _EntoliUtil.EntoliIndent)(), function () {
             return s.get('selected') === i ? _chalk.default.green('*') : '-';
           }, ') ', a[0]];
-        })), [["Current Selection: ", function () {
+        });
+        items.forEach(function (a, i) {
+          if (typeof a == 'function') {
+            tmp.splice(i, 0, [a()]);
+          }
+        });
+        s.setup([["Select an option"]].concat(_toConsumableArray(tmp), [["Current Selection: ", function () {
           return _chalk.default.green(s.get('selection'));
         }]]));
         new _EntolInterface.default({
@@ -51,8 +62,8 @@ function EntoliList(items) {
           },
           enter: function enter() {
             s.exit();
-            if (enterMessage) process.stdout.write("Selected option: " + _chalk.default.blue(items[index][0]) + '\n');
-            resolve(items[index]);
+            if (enterMessage) process.stdout.write("Selected option: " + _chalk.default.blue(selectionOptions[index][0]) + '\n');
+            resolve(selectionOptions[index]);
           },
           update: function update(str, key) {
             if (key.name == 'up') {
@@ -63,15 +74,15 @@ function EntoliList(items) {
               index++;
             }
 
-            if (index >= items.length) {
+            if (index >= selectionOptions.length) {
               index = 0;
             }
 
             if (index < 0) {
-              index = items.length - 1;
+              index = selectionOptions.length - 1;
             }
 
-            s.update([['selected', index], ['selection', items[index][0]]]);
+            s.update([['selected', index], ['selection', selectionOptions[index][0]]]);
           },
           exitMessage: exitMessage,
           preventExit: preventExit

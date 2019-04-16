@@ -1,8 +1,8 @@
 const stdin = require('mock-stdin').stdin();
 const assert = require('chai').assert;
-const { EntoliList, EntoliPrompt, EntoliListMulti } = require('../dist/exports');
+const { EntoliList, EntoliPrompt, EntoliListMulti, EntoliDivider, EntoliIndent } = require('../dist/exports');
 
-require('events').EventEmitter.defaultMaxListeners = 12;
+require('events').EventEmitter.defaultMaxListeners = 15;
 
 describe('EntoliList', function () {
     let l = [
@@ -80,6 +80,15 @@ describe('SimpleEntoliPrompt', function () {
 
         stdin.send('test\u001B[D\u001B[D\u001B[D\u001B[W\r');
     });
+    it('Remove last space going left and right twice from end of string', function (done) {
+        EP().then((a) => {
+            assert.equal(a, 'test');
+            done();
+        })
+            .catch(e => { throw e; });
+
+        stdin.send('test \u001B[D\u001B[C\u001B[C\u001B[W\r');
+    });
     it('Exit element', function (done) {
         EP().then((a) => {
             done();
@@ -98,8 +107,18 @@ describe('EntoliListMulti', function () {
         ['4', '4'],
         ['5', '5']
     ];
+    let dividerList = [
+        ['1', '1'],
+        ['2', '2'],
+        ['3', '3'],
+        EntoliDivider,
+        ['4', '4'],
+        ['5', '5']
+    ];
 
     let ELM = new EntoliListMulti(l, { enterMessage: false, exitMessage: false, preventExit: true });
+    let ELMD = new EntoliListMulti(dividerList, { enterMessage: false, exitMessage: false, preventExit: true });
+
     it('Select first option', function (done) {
         ELM().then((a) => {
             assert.deepEqual(a, [l[0]]);
@@ -126,6 +145,25 @@ describe('EntoliListMulti', function () {
 
         stdin.send('\r\r\u001B[B\u001B[B\r\u001B[B\u001B[B\u001B[B\r');
     });
+
+    it('Select first option with divider', function (done) {
+        ELMD().then((a) => {
+            assert.deepEqual(a, [dividerList[0]]);
+            done();
+        });
+
+        stdin.send('\r\u001B[A\r');
+    });
+
+    it('Select first and last option with divider', function (done) {
+        ELMD().then((a) => {
+            assert.deepEqual(a, [dividerList[0], dividerList[5]]);
+            done();
+        });
+
+        stdin.send('\r\u001B[B\u001B[B\u001B[B\u001B[B\r\u001B[B\r');
+    });
+
     it('Exit element', function (done) {
         ELM().then((a) => {
             done();

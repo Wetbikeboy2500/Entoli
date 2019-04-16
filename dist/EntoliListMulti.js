@@ -36,14 +36,23 @@ function EntoliListMulti(items) {
     var selected = [];
     return new Promise(function (resolve, reject) {
       try {
+        var selectionOptions = items.filter(function (a) {
+          return typeof a != 'function';
+        });
         var s = new _EntoliOutput.EntoliOutput([['selected', []], ['index', 0], ['selection', '']]);
-        s.setup([['Select an option']].concat(_toConsumableArray(items.map(function (a, i) {
+        var tmp = selectionOptions.map(function (a, i) {
           return [function () {
             return s.get('index') == i ? _chalk.default.blue('    > ') : '      ';
           }, function () {
             return s.get('selected').includes(i) ? _chalk.default.green(a[0]) : a[0];
           }];
-        })), [['Current Selections: ', function () {
+        });
+        items.forEach(function (a, i) {
+          if (typeof a == 'function') {
+            tmp.splice(i, 0, [a()]);
+          }
+        });
+        s.setup([['Select an option']].concat(_toConsumableArray(tmp), [['Current Selections: ', function () {
           return _chalk.default.green(s.get('selection'));
         }]]));
         var r = new _EntolInterface.default({
@@ -61,23 +70,23 @@ function EntoliListMulti(items) {
               index++;
             }
 
-            if (index >= items.length) {
+            if (index >= selectionOptions.length) {
               index = 0;
             }
 
             if (index < 0) {
-              index = items.length - 1;
+              index = selectionOptions.length - 1;
             }
 
             if (key.name == 'return') {
-              if (items[index][1] == '***cof*') {
+              if (selectionOptions[index][1] == '***cof*') {
                 r.stop();
                 s.exit();
                 if (enterMessage) process.stdout.write('Selected Options: ' + selected.map(function (a) {
-                  return items[a][0];
+                  return selectionOptions[a][0];
                 }).join(', ') + '\n');
                 resolve(selected.map(function (a) {
-                  return items[a];
+                  return selectionOptions[a];
                 }));
                 return;
               }
@@ -92,7 +101,7 @@ function EntoliListMulti(items) {
             }
 
             s.update([['index', index], ['selected', selected], ['selection', selected.map(function (a) {
-              return items[a][0];
+              return selectionOptions[a][0];
             }).join(', ')]]);
           },
           exitMessage: exitMessage,

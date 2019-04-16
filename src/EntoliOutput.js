@@ -1,3 +1,5 @@
+//TODO: add horizontal overflow precautions
+
 export class EntoliOutput {
     constructor(attributes = []) {
         this.values = new Map(attributes);
