@@ -13,7 +13,7 @@ var _chalk = _interopRequireDefault(require("chalk"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function SimpleEntoliPrompt(prompt) {
+function SimpleEntoliPrompt(promptDefault) {
   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
       _ref$enterMessage = _ref.enterMessage,
       enterMessage = _ref$enterMessage === void 0 ? true : _ref$enterMessage,
@@ -22,12 +22,30 @@ function SimpleEntoliPrompt(prompt) {
       _ref$preventExit = _ref.preventExit,
       preventExit = _ref$preventExit === void 0 ? false : _ref$preventExit;
 
+  var prompt = promptDefault;
+  var answer = '';
   return function () {
-    var answer = '';
-    var position = 0;
+    var optional = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    enterMessage = optional.enterMessage === true ? true : optional.enterMessage === false ? false : enterMessage;
+    exitMessage = optional.exitMessage === true ? true : optional.exitMessage === false ? false : exitMessage;
+    preventExit = optional.preventExit === true ? true : optional.preventExit === false ? false : preventExit;
+
+    if (optional.prompt) {
+      prompt = optional.prompt;
+    } else {
+      prompt = promptDefault;
+    }
+
+    if (optional.answer) {
+      answer = optional.answer;
+    } else {
+      answer = '';
+    }
+
+    var position = answer.length;
     return new Promise(function (resolve, reject) {
       try {
-        var s = new _EntoliOutput.EntoliOutput([['text', '']]);
+        var s = new _EntoliOutput.EntoliOutput([['text', answer]]);
         s.setup([[prompt, ' ', function () {
           return _chalk.default.green(s.get('text'));
         }]]);
@@ -47,10 +65,12 @@ function SimpleEntoliPrompt(prompt) {
             if (str == undefined && name != 'left' && name != 'right') return;
 
             if (name == 'backspace') {
-              var a = answer.split('');
-              a.splice(position - 1, 1);
-              answer = a.join('');
-              position -= 1;
+              if (position - 1 >= 0) {
+                var a = answer.split('');
+                a.splice(position - 1, 1);
+                answer = a.join('');
+                position -= 1;
+              }
             } else if (name == 'left') {
               position -= 1;
             } else if (name == 'right') {

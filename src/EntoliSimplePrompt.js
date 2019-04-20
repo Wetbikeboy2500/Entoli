@@ -2,15 +2,34 @@ import { EntoliOutput } from './EntoliOutput';
 import EntoliInterface from './EntolInterface';
 import chalk from 'chalk';
 
-export default function SimpleEntoliPrompt (prompt, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
-    return () => {
-        let answer = '';
-        let position = 0;
+export default function SimpleEntoliPrompt (promptDefault, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
+    let prompt = promptDefault;
+    let answer = '';
+
+    return (optional = {}) => {
+        enterMessage = (optional.enterMessage === true) ? true : (optional.enterMessage === false) ? false : enterMessage;
+        exitMessage = (optional.exitMessage === true) ? true : (optional.exitMessage === false) ? false : exitMessage;
+        preventExit = (optional.preventExit === true) ? true : (optional.preventExit === false) ? false : preventExit;
+        
+        if (optional.prompt) {
+            prompt = optional.prompt;
+        } else {
+            prompt = promptDefault;
+        }
+
+        
+        if (optional.answer) {
+            answer = optional.answer;
+        } else {
+            answer = '';
+        }
+
+        let position = answer.length;
 
         return new Promise((resolve, reject) => {
             try {
                 let s = new EntoliOutput([
-                    ['text', '']
+                    ['text', answer]
                 ]);
 
                 s.setup([
@@ -38,10 +57,12 @@ export default function SimpleEntoliPrompt (prompt, { enterMessage = true, exitM
                             return;
 
                         if (name == 'backspace') {
-                            let a = answer.split('');
-                            a.splice(position - 1, 1);
-                            answer = a.join('');
-                            position -= 1;
+                            if (position - 1 >= 0) {
+                                let a = answer.split('');
+                                a.splice(position - 1, 1);
+                                answer = a.join('');
+                                position -= 1;
+                            }
                         } else if (name == 'left') {
                             position -= 1;
                         } else if (name == 'right') {

@@ -23,8 +23,10 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function EntoliList(items) {
+function EntoliList(itemsDefault) {
   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      _ref$defaultPrompt = _ref.defaultPrompt,
+      defaultPrompt = _ref$defaultPrompt === void 0 ? "Select an option" : _ref$defaultPrompt,
       _ref$enterMessage = _ref.enterMessage,
       enterMessage = _ref$enterMessage === void 0 ? true : _ref$enterMessage,
       _ref$exitMessage = _ref.exitMessage,
@@ -33,7 +35,20 @@ function EntoliList(items) {
       preventExit = _ref$preventExit === void 0 ? false : _ref$preventExit;
 
   return function () {
-    var index = 0;
+    var optional = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+      items: null,
+      prompt: null,
+      defaultSelected: null,
+      enterMessage: enterMessage,
+      exitMessage: exitMessage,
+      preventExit: preventExit
+    };
+    var items = optional.items || itemsDefault;
+    enterMessage = optional.enterMessage;
+    exitMessage = optional.exitMessage;
+    preventExit = optional.preventExit;
+    var prompt = optional.prompt || defaultPrompt;
+    var index = optional.defaultSelected || 0;
     return new Promise(function (resolve, reject) {
       try {
         var selectionOptions = items.filter(function (a) {
@@ -41,7 +56,7 @@ function EntoliList(items) {
         });
         var s = new _EntoliOutput.EntoliOutput([].concat(_toConsumableArray(selectionOptions.map(function (a, i) {
           return ['index' + i, i];
-        })), [['selection', selectionOptions[0][0]], ['selected', 0]]));
+        })), [['selection', selectionOptions[index][0]], ['selected', index]]));
         var tmp = selectionOptions.map(function (a, i) {
           return [(0, _EntoliUtil.EntoliIndent)(), function () {
             return s.get('selected') === i ? _chalk.default.green('*') : '-';
@@ -52,7 +67,7 @@ function EntoliList(items) {
             tmp.splice(i, 0, [a()]);
           }
         });
-        s.setup([["Select an option"]].concat(_toConsumableArray(tmp), [["Current Selection: ", function () {
+        s.setup([[prompt]].concat(_toConsumableArray(tmp), [["Current Selection: ", function () {
           return _chalk.default.green(s.get('selection'));
         }]]));
         new _EntolInterface.default({

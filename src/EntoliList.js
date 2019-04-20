@@ -3,9 +3,18 @@ import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 import { EntoliIndent as Indent } from './EntoliUtil';
 
-export default function EntoliList (items, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
-    return () => {
-        let index = 0;
+export default function EntoliList (itemsDefault, { defaultPrompt = `Select an option`, enterMessage = true, exitMessage = true, preventExit = false } = {}) {
+    return (optional = {items: null, prompt: null, defaultSelected: null, enterMessage, exitMessage, preventExit}) => {
+        let items = optional.items || itemsDefault;
+
+
+        enterMessage = optional.enterMessage;
+        exitMessage = optional.exitMessage;
+        preventExit = optional.preventExit;
+
+
+        let prompt = optional.prompt || defaultPrompt;
+        let index = optional.defaultSelected || 0;
 
         return new Promise((resolve, reject) => {
             try {
@@ -15,8 +24,8 @@ export default function EntoliList (items, { enterMessage = true, exitMessage = 
                     ...selectionOptions.map((a, i) => {
                         return ['index' + i, i];
                     }),
-                    ['selection', selectionOptions[0][0]],
-                    ['selected', 0]
+                    ['selection', selectionOptions[index][0]],
+                    ['selected', index]
                 ]);
 
                 let tmp = selectionOptions.map((a, i) => {
@@ -30,7 +39,7 @@ export default function EntoliList (items, { enterMessage = true, exitMessage = 
                 });
 
                 s.setup([
-                    [`Select an option`],
+                    [prompt],
                     ...tmp,
                     [`Current Selection: `, () => chalk.green(s.get('selection'))]
                 ]);
