@@ -3,6 +3,7 @@ import EntoliMultiPrompt from './EntoliMultiPrompt';
 import EntoliList from './EntoliList';
 import { EntoliDivider as Divider } from './EntoliUtil';
 import EntoliMultiList from './EntoliListMulti';
+import EntoliListMulti from './EntoliListMulti';
 
 let El = EntoliPrompt('h', { enterMessage: false });
 
@@ -19,7 +20,7 @@ EntoliMultiPrompt([
 ]).then(a => console.log(a));*/
 
 
-El = EntoliList([
+El = EntoliListMulti([
     ['Name 1', 'Value 1'],
     Divider,
     ['Name 2', 'Value 2']
@@ -31,6 +32,6 @@ EntoliMultiPrompt([
             ['hello', null],
             ['world', null]
         ],
-        defaultSelected: 1
+        defaultSelected: [1]
     }),
 ]).then((a) => console.log(a));

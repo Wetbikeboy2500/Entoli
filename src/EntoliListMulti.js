@@ -2,20 +2,28 @@ import { EntoliOutput } from "./EntoliOutput";
 import chalk from 'chalk';
 import EntoliInterface from "./EntolInterface";
 
-export default function EntoliListMulti (items, { enterMessage = true, exitMessage = true, preventExit = false } = {}) {
-    items.push(['Confirm', '***cof*']);
-    return () => {
-        let index = 0;
-        let selected = [];
+export default function EntoliListMulti (itemsDefault, { defaultPrompt = 'Select option(s)', enterMessage = true, exitMessage = true, preventExit = false } = {}) {
+    return (optional = { enterMessage, exitMessage, preventExit }) => {
+        let items = optional.items || itemsDefault;
+
+        items.push(['Confirm', '***cof*']);
+
+        enterMessage = optional.enterMessage;
+        exitMessage = optional.exitMessage;
+        preventExit = optional.preventExit;
+
+        let prompt = optional.prompt || defaultPrompt;
+        let index = optional.cursorPosition || 0;
+        let selected = optional.defaultSelected || [];
 
         return new Promise((resolve, reject) => {
             try {
-               let selectionOptions = items.filter(a => typeof a != 'function');
+                let selectionOptions = items.filter(a => typeof a != 'function');
 
                 let s = new EntoliOutput([
-                    ['selected', []],
-                    ['index', 0],
-                    ['selection', '']
+                    ['selected', selected],
+                    ['index', index],
+                    ['selection', selected.map(a => selectionOptions[a][0]).join(', ')]
                 ]);
 
                 let tmp = selectionOptions.map((a, i) => {
@@ -29,7 +37,7 @@ export default function EntoliListMulti (items, { enterMessage = true, exitMessa
                 });
 
                 s.setup([
-                    ['Select an option'],
+                    [prompt],
                     ...tmp,
                     ['Current Selections: ', () => chalk.green(s.get('selection'))]
                 ]);

@@ -4,6 +4,9 @@ const { EntoliList, EntoliPrompt, EntoliListMulti, EntoliDivider, EntoliIndent }
 
 require('events').EventEmitter.defaultMaxListeners = 15;
 
+//TODO: build tests for post creation of objects
+//TODO: create tests for EntoliIndent and EntoliDivider
+
 describe('EntoliList', function () {
     let l = [
         ['1', '1'],
