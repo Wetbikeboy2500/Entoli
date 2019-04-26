@@ -9,9 +9,15 @@ import EntoliConfirm from './EntoliConfirm';
 
 let ec = EntoliConfirm('Do you want to continue');
 
-ec().then((a) => {
-    console.log(a);
-})
+let prompts = [
+    'Test1',
+    'test2',
+    'test3'
+];
+
+//linked confirmed list that requires all answers to be true
+EntoliMultiPrompt(prompts.map(a => () => ec({ prompt: a })))
+    .then(a => console.log(!a.includes(false)));
 
 
 let El = EntoliPrompt('h', { enterMessage: false });
