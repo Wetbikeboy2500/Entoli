@@ -5,6 +5,15 @@ import { EntoliDivider as Divider } from './EntoliUtil';
 import EntoliMultiList from './EntoliListMulti';
 import EntoliListMulti from './EntoliListMulti';
 
+import EntoliConfirm from './EntoliConfirm';
+
+let ec = EntoliConfirm('Do you want to continue');
+
+ec().then((a) => {
+    console.log(a);
+})
+
+
 let El = EntoliPrompt('h', { enterMessage: false });
 
 
@@ -19,7 +28,7 @@ EntoliMultiPrompt([
     })
 ]).then(a => console.log(a));*/
 
-
+/*
 El = EntoliListMulti([
     ['Name 1', 'Value 1'],
     Divider,
@@ -34,4 +43,4 @@ EntoliMultiPrompt([
         ],
         defaultSelected: [1]
     }),
-]).then((a) => console.log(a));
+]).then((a) => console.log(a));*/

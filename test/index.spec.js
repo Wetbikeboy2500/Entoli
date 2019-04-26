@@ -176,3 +176,15 @@ describe('EntoliListMulti', function () {
         stdin.send('\u001B[3;;');
     });
 });
+
+describe('Test utilities', function () {
+    it('Entoli Indent default', function () {
+        assert.equal(EntoliIndent(), '    ')
+    });
+    it('Entoli Indent 2', function () {
+        assert.equal(EntoliIndent(2), '        ')
+    });
+    it('Entoli Divider', function () {
+        assert.equal(EntoliDivider(), EntoliIndent() + '__________');
+    });
+});
