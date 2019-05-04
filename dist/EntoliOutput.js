@@ -52,11 +52,7 @@ var EntoliOutput = function () {
       });
       process.stdout.on('resize', function () {
         _this.output.forEach(function (a, i) {
-          if (process.stdout.rows >= _this.output.length - i) {
-            _this.clear(i);
-
-            _this.render(i);
-          }
+          _this.rerender(i);
         });
       });
       this.isSetup = true;
@@ -86,40 +82,51 @@ var EntoliOutput = function () {
       var difs = [];
       var that = this;
       this.template.forEach(function (a, i) {
-        var line = i;
-        var build = that.buildOutput(line);
+        var build = that.buildOutput(i);
 
         if (build !== that.output[i]) {
           that.output[i] = build;
-          difs.push(line);
+          difs.push(i);
         }
       });
       var _arr = difs;
 
       for (var _i = 0; _i < _arr.length; _i++) {
         var a = _arr[_i];
-
-        if (process.stdout.rows >= this.output.length - a) {
-          this.clear(a);
-          this.render(a);
-        }
+        this.rerender(a);
       }
     }
   }, {
     key: "render",
     value: function render(line) {
+      var move = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       if (this.enabled) {
-        var m = this.goTo(line);
+        var m;
+        if (move) m = this.goTo(line);
         process.stdout.write(this.output[line]);
-        this.changeLine(m);
+        if (move) this.changeLine(m);
       }
     }
   }, {
     key: "clear",
     value: function clear(line) {
+      var move = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       if (this.enabled && this.isSetup) {
-        var m = this.goTo(line);
+        var m;
+        if (move) m = this.goTo(line);
         process.stdout.clearLine(0);
+        if (move) this.changeLine(m);
+      }
+    }
+  }, {
+    key: "rerender",
+    value: function rerender(line) {
+      if (this.enabled && process.stdout.rows >= this.output.length - line) {
+        var m = this.goTo(line);
+        this.clear(line, false);
+        this.render(line, false);
         this.changeLine(m);
       }
     }

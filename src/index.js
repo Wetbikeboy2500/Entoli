@@ -7,6 +7,7 @@ import EntoliListMulti from './EntoliListMulti';
 
 import EntoliConfirm from './EntoliConfirm';
 
+/*
 let ec = EntoliConfirm('Do you want to continue');
 
 let prompts = [
@@ -21,7 +22,7 @@ EntoliMultiPrompt(prompts.map(a => () => ec({ prompt: a })))
 
 
 let El = EntoliPrompt('h', { enterMessage: false });
-
+*/
 
 /*
 EntoliMultiPrompt([
@@ -34,8 +35,8 @@ EntoliMultiPrompt([
     })
 ]).then(a => console.log(a));*/
 
-/*
-El = EntoliListMulti([
+
+let El = EntoliListMulti([
     ['Name 1', 'Value 1'],
     Divider,
     ['Name 2', 'Value 2']
@@ -49,4 +50,4 @@ EntoliMultiPrompt([
         ],
         defaultSelected: [1]
     }),
-]).then((a) => console.log(a));*/
+]).then((a) => console.log(a));

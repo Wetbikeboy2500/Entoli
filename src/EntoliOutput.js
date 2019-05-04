@@ -32,10 +32,7 @@ export class EntoliOutput {
 
         process.stdout.on('resize', () => {
             this.output.forEach((a, i) => {
-                if (process.stdout.rows >= (this.output.length - i)) { //need to fix rendering outside of view
-                    this.clear(i);
-                    this.render(i);
-                }
+                this.rerender(i);
             })
         });
 
@@ -63,35 +60,48 @@ export class EntoliOutput {
         let difs = [];
         let that = this;
 
+        //TODO: remove the variable line since it is not needed
         this.template.forEach((a, i) => {
-            let line = i;
-            let build = that.buildOutput(line);
+            let build = that.buildOutput(i);
             if (build !== that.output[i]) {
                 that.output[i] = build;
-                difs.push(line);
+                difs.push(i);
             }
         });
 
         for (let a of difs) {
-            if (process.stdout.rows >= (this.output.length - a)) { //need to fix rendering outside of view
-                this.clear(a);
-                this.render(a);
-            }
+            this.rerender(a);
         }
     }
 
-    render (line) {
+    render (line, move = true) {
         if (this.enabled) {
-            let m = this.goTo(line);
+            let m;
+            if (move)
+                m = this.goTo(line);
             process.stdout.write(this.output[line]);
-            this.changeLine(m);
+            if (move)
+                this.changeLine(m);
         }
     }
 
-    clear (line) { //0 is first from bottom, 1 is second, etc.
+    clear (line, move = true) { //0 is first from bottom, 1 is second, etc.
         if (this.enabled && this.isSetup) {
-            let m = this.goTo(line);
+            let m;
+            if (move)
+                m = this.goTo(line);
             process.stdout.clearLine(0);
+            if (move)
+                this.changeLine(m);
+        }
+    }
+
+    //better for rerendering lines since it reduces amount of output operations
+    rerender (line) {
+        if (this.enabled && (process.stdout.rows >= (this.output.length - line))) {
+            let m = this.goTo(line);
+            this.clear(line, false);
+            this.render(line, false);
             this.changeLine(m);
         }
     }
