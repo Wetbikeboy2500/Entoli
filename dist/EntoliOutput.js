@@ -94,10 +94,9 @@ var EntoliOutput = function () {
           difs.push(line);
         }
       });
-      var _arr = difs;
 
-      for (var _i = 0; _i < _arr.length; _i++) {
-        var a = _arr[_i];
+      for (var _i = 0, _difs = difs; _i < _difs.length; _i++) {
+        var a = _difs[_i];
 
         if (process.stdout.rows >= this.output.length - a) {
           this.clear(a);

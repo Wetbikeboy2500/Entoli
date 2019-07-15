@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _EntoliOutput = require("./EntoliOutput");
 
@@ -11,7 +11,7 @@ var _EntolInterface = _interopRequireDefault(require("./EntolInterface"));
 
 var _chalk = _interopRequireDefault(require("chalk"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -33,17 +33,17 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
       try {
         var s = new _EntoliOutput.EntoliOutput([['text', '']]);
         s.setup([[prompt, ' ', function () {
-          return _chalk.default.green(s.get('text'));
+          return _chalk["default"].green(s.get('text'));
         }]]);
         process.stdout.cursorTo(prompt.length + position + 1);
-        new _EntolInterface.default({
+        new _EntolInterface["default"]({
           exit: function exit() {
             s.exit();
             resolve();
           },
           enter: function enter() {
             s.exit();
-            if (enterMessage) process.stdout.write("Wrote: " + _chalk.default.blue(answer) + '\n');
+            if (enterMessage) process.stdout.write("Wrote: " + _chalk["default"].blue(answer) + '\n');
             resolve(answer);
           },
           update: function update(str, key) {
@@ -90,4 +90,4 @@ var SimpleEntoliPrompt = function SimpleEntoliPrompt(prompt) {
   };
 };
 
-exports.default = SimpleEntoliPrompt;
+exports["default"] = SimpleEntoliPrompt;

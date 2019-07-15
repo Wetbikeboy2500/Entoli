@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _readline = _interopRequireDefault(require("readline"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -71,7 +71,7 @@ var EntoliInterface = function () {
     value: function start() {
       process.stdin.resume();
 
-      _readline.default.emitKeypressEvents(process.stdin);
+      _readline["default"].emitKeypressEvents(process.stdin);
 
       process.stdin.setRawMode(true);
       if (this.hideCursor) process.stderr.write('\x1B[?25l');
@@ -97,4 +97,4 @@ var EntoliInterface = function () {
   return EntoliInterface;
 }();
 
-exports.default = EntoliInterface;
+exports["default"] = EntoliInterface;

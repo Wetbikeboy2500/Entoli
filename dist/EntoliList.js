@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _EntoliOutput = require("./EntoliOutput");
 
@@ -11,7 +11,7 @@ var _chalk = _interopRequireDefault(require("chalk"));
 
 var _EntolInterface = _interopRequireDefault(require("./EntolInterface"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -43,19 +43,19 @@ var EntoliList = function EntoliList(items) {
         })), [['selection', items[0][0]], ['selected', 0]]));
         s.setup([["Select an option"]].concat(_toConsumableArray(items.map(function (a, i) {
           return ['    ', function () {
-            return s.get('selected') === i ? _chalk.default.green('*') : '-';
+            return s.get('selected') === i ? _chalk["default"].green('*') : '-';
           }, ') ', a[0]];
         })), [["Current Selection: ", function () {
-          return _chalk.default.green(s.get('selection'));
+          return _chalk["default"].green(s.get('selection'));
         }]]));
-        new _EntolInterface.default({
+        new _EntolInterface["default"]({
           exit: function exit() {
             s.exit();
             resolve();
           },
           enter: function enter() {
             s.exit();
-            if (enterMessage) process.stdout.write("Selected option: " + _chalk.default.blue(items[index][0]) + '\n');
+            if (enterMessage) process.stdout.write("Selected option: " + _chalk["default"].blue(items[index][0]) + '\n');
             resolve(items[index]);
           },
           update: function update(str, key) {
@@ -87,4 +87,4 @@ var EntoliList = function EntoliList(items) {
   };
 };
 
-exports.default = EntoliList;
+exports["default"] = EntoliList;
