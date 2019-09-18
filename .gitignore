@@ -85,3 +85,5 @@ typings/
 
 # ignore codecov's yml file because api key
 codecov.yml
+
+/*.bat
