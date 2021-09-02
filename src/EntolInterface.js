@@ -50,6 +50,7 @@ export default class EntoliInterface {
 
     exit () {
         process.stderr.write('\x1B[?25h');
+        process.stdin.removeListener('keypress', this.event);
         process.stdin.setRawMode(false);
         if (this.exitMessage)
             process.stdout.write('Exited the object');

@@ -88,6 +88,7 @@ var EntoliInterface = function () {
     key: "exit",
     value: function exit() {
       process.stderr.write('\x1B[?25h');
+      process.stdin.removeListener('keypress', this.event);
       process.stdin.setRawMode(false);
       if (this.exitMessage) process.stdout.write('Exited the object');
       if (!this.preventExit) process.exit();

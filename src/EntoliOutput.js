@@ -27,17 +27,18 @@ export class EntoliOutput {
             }
         });
 
-
-        process.stdout.on('resize', () => {
-            this.output.forEach((a, i) => {
-                if (process.stdout.rows >= (this.output.length - i)) { //need to fix rendering outside of view
-                    this.clear(i);
-                    this.render(i);
-                }
-            })
-        });
+        process.stdout.on('resize', this.resize);
 
         this.isSetup = true;
+    }
+
+    resize() {
+        this.output.forEach((a, i) => {
+            if (process.stdout.rows >= (this.output.length - i)) { //need to fix rendering outside of view
+                this.clear(i);
+                this.render(i);
+            }
+        })
     }
 
     get (name) {
@@ -106,6 +107,7 @@ export class EntoliOutput {
     }
 
     exit () {
+        process.stdout.removeListener('resize', this.resize);
         this.enabled = false;
         this.goTo(0);
         process.stdout.clearLine(0);
