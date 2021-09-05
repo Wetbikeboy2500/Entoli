@@ -44,7 +44,6 @@ export default class EntoliInterface {
         process.stderr.write('\x1B[?25h');
         process.stdin.setRawMode(false);
         process.stdin.removeListener('keypress', this.event);
-        //process.stdin.removeAllListeners(['keypress']);
         process.stdin.pause();
     }
 
